@@ -1,38 +1,35 @@
-from collections import namedtuple
-import altair as alt
-import math
-import pandas as pd
-import streamlit as st
-
-"""
-# Welcome to Streamlit!
-
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
-
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
-
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+import openai
+import tiktoken
+import pincone
+import os
+import re
+import requests
+import urllib.request
+from bs4 import BeautifulSoup
+from collections import deque
+from html.parser import HTMLParser
+from urllib.parse import urlparse
+from IPython.display import Markdown
 
 
-with st.echo(code_location='below'):
-    total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-    num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
+OPENAI_API_KEY = "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"
+PINECONE_API_KEY = '7794ea9f-20d7-4bc2-9519-c5798db3f6d5'
+PINECONE_API_ENV = 'us-central1-gcp'
 
-    Point = namedtuple('Point', 'x y')
-    data = []
+# initialize pinecone
+pinecone.init(
+    api_key=PINECONE_API_KEY,  # find at app.pinecone.io
+    environment=PINECONE_API_ENV  
+)
+index_name = "langchainswami"
 
-    points_per_turn = total_points / num_turns
+from langchain.llms import OpenAI
+from langchain.chains.question_answering import load_qa_chain
 
-    for curr_point_num in range(total_points):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
+llm = OpenAI(temperature=0, openai_api_key=OPENAI_API_KEY)
+chain = load_qa_chain(llm, chain_type="stuff")
 
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
+query = "What will happen when there is a failure to achieve book speeds?"
+docs = docsearch.similarity_search(query, include_metadata=True)
+
+chain.run(input_documents=docs, question=query)
