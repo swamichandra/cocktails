@@ -12,8 +12,8 @@ from urllib.parse import urlparse
 from IPython.display import Markdown
 
 
-OPENAI_API_KEY = "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"
-PINECONE_API_KEY = '7794ea9f-20d7-4bc2-9519-c5798db3f6d5'
+OPENAI_API_KEY = ""
+PINECONE_API_KEY = ''
 PINECONE_API_ENV = 'us-central1-gcp'
 
 # initialize pinecone
