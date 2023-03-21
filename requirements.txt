@@ -1,5 +1,3 @@
-altair
-pandas
 streamlit
 langchain
 openai
