@@ -5,7 +5,6 @@ unstructured
 python-magic
 chromadb
 pinecone-client
-detectron2
 layoutparser
 layoutmodels
 tesseract
