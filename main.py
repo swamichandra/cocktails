@@ -30,8 +30,7 @@ st.markdown(f""" <style>
 if os.environ["OPENAI_API_KEY"]:
     st.title("Cocktail Maker")
     st.caption("Let generative AI come up with drink recipes")
-    st.caption("Author: Swami Chandrasekaran")
-else:
+else
     st.error("🔑 Please enter API Key")
 
 cocktail_name = ""
@@ -126,7 +125,9 @@ with st.form('app'):
     with col3:
         drink = st.selectbox('Type of drink', options=['Cocktail', 'Shot', 'Punch'])
         print(drink)
-
+    
+    st.caption("Author: Swami Chandrasekaran")
+  
     #btn = st.button(label="GENERATE")
     btn = st.form_submit_button("GENERATE")
 
