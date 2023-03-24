@@ -107,8 +107,8 @@ with placeholder.container():
         col1, col2, col3 = st.columns([1, 1, 1])
 
         with col1:
-            #optional_ingredient = st.text_input('I will come up with ingredients. Any particular ones you want me to add?', placeholder="Add as many ingredients you want me to use seperated by commas")
-            optional_ingredient = st.multiselect(label='I will decide on the ingredients. Any particular ones to include?', options=ingredients,)
+            #optional_ingredient = st.text_input('I will pick the ingredients. But any particular ones you want me to add?', placeholder="Add as many ingredients you want me to use seperated by commas")
+            optional_ingredient = st.multiselect(label='I will pick the ingredients. But any particular ones to include?', options=ingredients,)
             print(optional_ingredient)
 
         with col2:
