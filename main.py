@@ -129,11 +129,6 @@ with placeholder.container():
         #btn = st.button(label="GENERATE")
         btn = st.form_submit_button("GENERATE")
 
-        btnReset = st.form_submit_button("RESET")
-    
-    if btnReset:
-        st.stop()
-
     if btn:
         if 'x' in st.session_state.keys():
             st.session_state['x']=st.session_state['x']+1
