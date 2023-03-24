@@ -108,7 +108,7 @@ with st.form('app'):
 
     with col1:
         #optional_ingredient = st.text_input('I will come up with ingredients. Any particular ones you want me to add?', placeholder="Add as many ingredients you want me to use seperated by commas")
-        optional_ingredient = st.multiselect(label='Any ingredients you want me to include?', options=ingredients,)
+        optional_ingredient = st.multiselect(label='I will come up with the ingredients. Any particular ones you want me to incoporate?', options=ingredients,)
         print(optional_ingredient)
 
     with col2:
