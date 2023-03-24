@@ -128,9 +128,13 @@ with placeholder.container():
 
         #btn = st.button(label="GENERATE")
         btn = st.form_submit_button("GENERATE")
+
+        btnReset = st.form_submit_button("RESET")
     
+    if btnReset:
+        st.stop()
+
     if btn:
-        #placeholder.empty()
         if 'x' in st.session_state.keys():
             st.session_state['x']=st.session_state['x']+1
         else:
@@ -194,6 +198,5 @@ with placeholder.container():
             with col2:
                 st.subheader("Multi-Chain JSON")
                 st.json(output)
-
 
 st.caption("Non-Humanoid Developer: Swami Chandrasekaran")
