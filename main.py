@@ -195,7 +195,5 @@ with placeholder.container():
                 st.subheader("Multi-Chain JSON")
                 st.json(output)
 
-        if 'x' in st.session_state.keys():
-            st.write(st.session_state['x'])
 
 st.caption("Non-Humanoid Developer: Swami Chandrasekaran")
