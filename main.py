@@ -152,7 +152,7 @@ if btn:
         with col2:
             st.subheader("How will this drink look?")
             #st.markdown(drink)
-            prompt_4_diffusion = "alcoholic " + drink + " drink named " + cocktail_name + ". Incoporate harmony, exploded --iw 9 --q 2 -uplight --s 42000 --ar 4:3 --version 3"
+            prompt_4_diffusion = "alcoholic " + drink + " drink named " + cocktail_name + ". Layered, isometric, harmony -uplight --s 42000 --ar 4:3 --version 3"
             #st.markdown(prompt_4_diffusion.strip())
             print(prompt_4_diffusion)
 
