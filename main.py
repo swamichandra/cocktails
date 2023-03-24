@@ -4,6 +4,7 @@ import os
 import re
 import openai
 import streamlit as st
+from streamlit_tags import st_tags, st_tags_sidebar
 from langchain.llms import OpenAI
 from langchain import PromptTemplate
 from langchain.chains import LLMChain
@@ -11,13 +12,25 @@ from langchain.chains import SequentialChain
 from langchain.chains import SimpleSequentialChain
 from PIL import Image
 
-st.set_page_config(page_title="Cocktail Maker powered by GPT-3", page_icon=":random:", layout="wide")
+# All of Streamlit config and customization
+st.set_page_config(page_title="Cocktail Maker powered by Generative AI", page_icon=":random:", layout="wide")
+st.markdown(""" <style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style> """, unsafe_allow_html=True)
+padding = 0
+st.markdown(f""" <style>
+    .reportview-container .main .block-container{{
+        padding-top: {padding}rem;
+        padding-right: {padding}rem;
+        padding-left: {padding}rem;
+        padding-bottom: {padding}rem;
+    }} </style> """, unsafe_allow_html=True)
 
 #START LLM portions
-
 if os.environ["OPENAI_API_KEY"]:
     st.title("Cocktail Maker")
-    st.caption("Be ready to be surprised by generative AI coming up with cocktail recipes")
+    st.caption("Let generative AI come up with drink recipes")
 else:
     st.error("🔑 Please enter API Key")
 
@@ -56,7 +69,7 @@ cocktail_gen_chain = LLMChain(llm=llm, prompt=prompt_4_cocktail, output_key="coc
 #This is an LLMChain to generate a short haiku poem for the cocktail based on the ingredients.
 llm = OpenAI(model_name=SECONDARY_MODEL, temperature=0.7, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=200, best_of=3, top_p=0.5)
 
-template2 = """###Write a fascinating two line short poem about a {drink} that has the following ingredients {ingredient}###."""
+template2 = """###Write a restaurant menu style short description for a {drink} that has the following ingredients {ingredient}###."""
 
 prompt_4_poem = PromptTemplate(input_variables=["drink", "ingredient"], template=template2.strip(),)
 cocktail_poem_chain = LLMChain(llm=llm, prompt=prompt_4_poem, output_key="poem", verbose=True)
@@ -121,17 +134,17 @@ if btn:
     ingredient_input = get_ingredient()
     inspiration_input = get_inspiration()
     
-    with st.spinner(text="Building your " + drink + " recipe ..."):
+    with st.spinner(text="Building your " + craziness + " " + drink + " recipe ..."):
         output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name })
         print(output)
+        cocktail_name = output['cocktail'][:output['cocktail'].index("Ingredients")]
+        cocktail_name = cocktail_name.strip().partition("Cocktail Name:")[2].strip()
+        #st.header(cocktail_name)
+        #print(cocktail_name)
+        st.header(cocktail_name)
 
         col1, col2 = st.columns(2)
         with col1:
-            cocktail_name = output['cocktail'][:output['cocktail'].index("Ingredients")]
-            cocktail_name = cocktail_name.strip().partition("Cocktail Name:")[2].strip()
-            #st.header(cocktail_name)
-            print(cocktail_name)
-
             st.subheader("How to mix this?")
             ingredients_list = output['cocktail'].strip().partition("Ingredients:")[2]
             ingredients_list = output['cocktail'][:output['cocktail'].index("Rationale")]
@@ -140,7 +153,7 @@ if btn:
         with col2:
             st.subheader("How will this drink look?")
             #st.markdown(drink)
-            prompt_4_diffusion = "Alcoholic " + drink + " named " + cocktail_name + ". Make it modern, and cinematic light, kodak, harmony --version 3 --s 42000 --ar 4:3"
+            prompt_4_diffusion = "Alcoholic " + drink + " drink named " + cocktail_name + ". Make it real, fantastic backlight, studio light, Agfa Vista 200, harmony --s 42000 --ar 4:3 --version 3"
             #st.markdown(prompt_4_diffusion.strip())
             print(prompt_4_diffusion)
 
@@ -155,27 +168,23 @@ if btn:
 
         col1, col2 = st.columns(2)
         with col1:
-            st.subheader("Why did I recommend?")
+            st.multiselect(
+                label='Ingredients used in this ' + drink,
+                options=output['ingredient'].split(", "),
+                default=output['ingredient'].split(", "),
+                disabled=True,
+                )
+            
+            st.multiselect(
+                label='Inspired from',
+                options=[output['inspiration'].replace(" ", " ")],
+                default=[output['inspiration'].replace(" ", " ")],
+                disabled=True,
+            )
+
+            st.subheader("Why this " + drink + "?")
             st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
         
         with col2:
             st.subheader("Multi-Chain JSON")
             st.json(output)
-
-        with st.sidebar:
-            st.header("Ingredients Used in this Cocktail")
-            st.multiselect(
-                label='',
-                options=output['ingredient'].split(", "),
-                default=output['ingredient'].split(", "),
-                )
-        with st.sidebar:
-            st.header("Inspired From")
-            st.multiselect(
-                label='',
-                options=[output['inspiration'].replace(" ", " ")],
-                default=[output['inspiration'].replace(" ", " ")],
-            )
-
-        print(output['inspiration'])
-        print(type(output['inspiration']))
