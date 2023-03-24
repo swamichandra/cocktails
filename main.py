@@ -130,7 +130,7 @@ with placeholder.container():
         btn = st.form_submit_button("GENERATE")
     
 if btn:
-    placeholder.empty()
+    #placeholder.empty()
     ingredient_input = get_ingredient()
     inspiration_input = get_inspiration()
     
