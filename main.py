@@ -188,4 +188,4 @@ if btn:
             st.subheader("Multi-Chain JSON")
             st.json(output)
 
-st.caption("Author: Swami Chandrasekaran")
+st.caption("Humanoid Developer: Swami Chandrasekaran")
