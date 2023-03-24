@@ -14,23 +14,6 @@ from PIL import Image
 
 st.set_page_config(page_title="Cocktail Maker powered by GPT-3", page_icon=":random:", layout="wide")
 
-font_css = """
-<style>
-btn {
-    font-size: 22px;
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-}
-</style>
-"""
-st.write(font_css, unsafe_allow_html = True)
-
 #START LLM portions
 os.environ["OPENAI_API_KEY"] = "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"
 
