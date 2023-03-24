@@ -129,65 +129,73 @@ with placeholder.container():
         #btn = st.button(label="GENERATE")
         btn = st.form_submit_button("GENERATE")
     
-if btn:
-    #placeholder.empty()
-    ingredient_input = get_ingredient()
-    inspiration_input = get_inspiration()
-    
-    with st.spinner(text="Building your " + craziness + " " + drink + " recipe ..."):
-        output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name })
-        print(output)
-        cocktail_name = output['cocktail'][:output['cocktail'].index("Ingredients")]
-        cocktail_name = cocktail_name.strip().partition("Cocktail Name:")[2].strip()
-        #st.header(cocktail_name)
-        #print(cocktail_name)
-        st.header(cocktail_name)
+    if btn:
+        #placeholder.empty()
+        if 'x' in st.session_state.keys():
+            st.session_state['x']=st.session_state['x']+1
+        else:
+            st.session_state['x']=1
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.subheader("How to mix this?")
-            ingredients_list = output['cocktail'].strip().partition("Ingredients:")[2]
-            ingredients_list = output['cocktail'][:output['cocktail'].index("Rationale")]
-            st.markdown(ingredients_list)
-
-        with col2:
-            st.subheader("How will this drink look?")
-            #st.markdown(drink)
-            #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Artgerm, ad, cinematic, earthy --ar 4:3 --s 42000 --version 3"
-            prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Magazine cover --ar 4:3 --v 4"
-            #st.markdown(prompt_4_diffusion.strip())
-            print(prompt_4_diffusion)
-
-            kwargs = {
-                "prompt": prompt_4_diffusion,
-                "n": 1,
-                "size": '512x512'}
-            image_resp = openai.Image.create(**kwargs)
-            image_url = image_resp['data'][0]['url']
-            st.image(image_url)
-            st.caption(output['poem'].strip())
-
-        col1, col2 = st.columns(2)
-        with col1:
-            st.multiselect(
-                label='Ingredients used in this ' + drink,
-                options=output['ingredient'].split(", "),
-                default=output['ingredient'].split(", "),
-                disabled=True,
-                )
-            
-            st.multiselect(
-                label='Inspired from',
-                options=[output['inspiration'].replace(" ", " ")],
-                default=[output['inspiration'].replace(" ", " ")],
-                disabled=True,
-            )
-
-            st.subheader("Why this " + drink + "?")
-            st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
+        ingredient_input = get_ingredient()
+        inspiration_input = get_inspiration()
         
-        with col2:
-            st.subheader("Multi-Chain JSON")
-            st.json(output)
+        with st.spinner(text="Building your " + craziness + " " + drink + " recipe ..."):
+            output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name })
+            print(output)
+            cocktail_name = output['cocktail'][:output['cocktail'].index("Ingredients")]
+            cocktail_name = cocktail_name.strip().partition("Cocktail Name:")[2].strip()
+            #st.header(cocktail_name)
+            #print(cocktail_name)
+            st.header(cocktail_name)
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.subheader("How to mix this?")
+                ingredients_list = output['cocktail'].strip().partition("Ingredients:")[2]
+                ingredients_list = output['cocktail'][:output['cocktail'].index("Rationale")]
+                st.markdown(ingredients_list)
+
+            with col2:
+                st.subheader("How will this drink look?")
+                #st.markdown(drink)
+                #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Artgerm, ad, cinematic, earthy --ar 4:3 --s 42000 --version 3"
+                prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover --ar 4:3 --v 4"
+                #st.markdown(prompt_4_diffusion.strip())
+                print(prompt_4_diffusion)
+
+                kwargs = {
+                    "prompt": prompt_4_diffusion,
+                    "n": 1,
+                    "size": '512x512'}
+                image_resp = openai.Image.create(**kwargs)
+                image_url = image_resp['data'][0]['url']
+                st.image(image_url)
+                st.caption(output['poem'].strip())
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.multiselect(
+                    label='Ingredients used in this ' + drink,
+                    options=output['ingredient'].split(", "),
+                    default=output['ingredient'].split(", "),
+                    disabled=True,
+                    )
+                
+                st.multiselect(
+                    label='Inspired from',
+                    options=[output['inspiration'].replace(" ", " ")],
+                    default=[output['inspiration'].replace(" ", " ")],
+                    disabled=True,
+                )
+
+                st.subheader("Why this " + drink + "?")
+                st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
+            
+            with col2:
+                st.subheader("Multi-Chain JSON")
+                st.json(output)
+
+        if 'x' in st.session_state.keys():
+            st.write(st.session_state['x'])
 
 st.caption("Non-Humanoid Developer: Swami Chandrasekaran")
