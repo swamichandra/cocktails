@@ -14,7 +14,6 @@ from PIL import Image
 st.set_page_config(page_title="Cocktail Maker powered by GPT-3", page_icon=":random:", layout="wide")
 
 #START LLM portions
-os.environ["OPENAI_API_KEY"] = "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"
 
 if os.environ["OPENAI_API_KEY"]:
     st.title("Cocktail Maker")
