@@ -30,6 +30,7 @@ st.markdown(f""" <style>
 if os.environ["OPENAI_API_KEY"]:
     st.title("Cocktail Maker")
     st.caption("Let generative AI come up with drink recipes")
+    st.caption("Author: Swami Chandrasekaran")
 else:
     st.error("🔑 Please enter API Key")
 
@@ -152,7 +153,7 @@ if btn:
         with col2:
             st.subheader("How will this drink look?")
             #st.markdown(drink)
-            prompt_4_diffusion = "Alcoholic " + drink + " drink named " + cocktail_name + ". Harmony, peace, earth balanced, Agfa Vista 200 -uplight --s 42000 --ar 4:3 --version 3"
+            prompt_4_diffusion = "Alcoholic " + drink + " drink named " + cocktail_name + ". Harmony, peace, earth balanced -iw 9 -q 2 -uplight --s 42000 --ar 4:3 --version 3"
             #st.markdown(prompt_4_diffusion.strip())
             print(prompt_4_diffusion)
 
