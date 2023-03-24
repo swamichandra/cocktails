@@ -152,7 +152,7 @@ if btn:
         with col2:
             st.subheader("How will this drink look?")
             #st.markdown(drink)
-            prompt_4_diffusion = "alcoholic " + drink + " drink named " + cocktail_name + ". in-focus, hyper realism --s 42000 --ar 4:3 --uplight"
+            prompt_4_diffusion = "alcoholic " + drink + " drink named " + cocktail_name + ". Neo, hyper realism --s 42000 --ar 4:3 --uplight"
             #st.markdown(prompt_4_diffusion.strip())
             print(prompt_4_diffusion)
 
