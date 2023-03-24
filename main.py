@@ -125,8 +125,6 @@ with st.form('app'):
     with col3:
         drink = st.selectbox('Type of drink', options=['Cocktail', 'Shot', 'Punch'])
         print(drink)
-    
-    st.caption("Author: Swami Chandrasekaran")
   
     #btn = st.button(label="GENERATE")
     btn = st.form_submit_button("GENERATE")
@@ -189,3 +187,5 @@ if btn:
         with col2:
             st.subheader("Multi-Chain JSON")
             st.json(output)
+
+st.caption("Author: Swami Chandrasekaran")
