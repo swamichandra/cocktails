@@ -27,6 +27,7 @@ st.markdown(f""" <style>
     }} </style> """, unsafe_allow_html=True)
 
 #START LLM portions
+
 if os.environ["OPENAI_API_KEY"]:
     st.title("Master Mixologist")
     st.caption("Let generative AI come up with drink recipes")
@@ -97,33 +98,39 @@ def get_inspiration():
     return input_text
 
 optional_ingredient = ""
-with st.form('app'):
-    col1, col2, col3 = st.columns([1, 1, 1])
 
-    with col1:
-        #optional_ingredient = st.text_input('I will come up with ingredients. Any particular ones you want me to add?', placeholder="Add as many ingredients you want me to use seperated by commas")
-        optional_ingredient = st.multiselect(label='I will decide on the ingredients. Any particular ones to include?', options=ingredients,)
-        print(optional_ingredient)
+#You can check .empty documentation
+placeholder = st.empty()
 
-    with col2:
-        craziness = st.select_slider('How crazy you want me to go?', options=['crazy', 'crazier', 'craziest'])
+with placeholder.container():
+    with st.form('app'):
+        col1, col2, col3 = st.columns([1, 1, 1])
 
-        if craziness == 'crazier':
-            PRESENCE_PENALTY = 1.5
-            FREQUENCY_PENALTY = 1.5
-        
-        if craziness == 'craziest':
-            PRESENCE_PENALTY = 2.0
-            FREQUENCY_PENALTY = 2.0
+        with col1:
+            #optional_ingredient = st.text_input('I will come up with ingredients. Any particular ones you want me to add?', placeholder="Add as many ingredients you want me to use seperated by commas")
+            optional_ingredient = st.multiselect(label='I will decide on the ingredients. Any particular ones to include?', options=ingredients,)
+            print(optional_ingredient)
 
-    with col3:
-        drink = st.selectbox('Type of drink', options=['Cocktail', 'Shot', 'Punch'])
-        print(drink)
-  
-    #btn = st.button(label="GENERATE")
-    btn = st.form_submit_button("GENERATE")
+        with col2:
+            craziness = st.select_slider('How crazy you want me to go?', options=['crazy', 'crazier', 'craziest'])
 
+            if craziness == 'crazier':
+                PRESENCE_PENALTY = 1.5
+                FREQUENCY_PENALTY = 1.5
+            
+            if craziness == 'craziest':
+                PRESENCE_PENALTY = 2.0
+                FREQUENCY_PENALTY = 2.0
+
+        with col3:
+            drink = st.selectbox('Type of drink', options=['Cocktail', 'Shot', 'Punch'])
+            print(drink)
+
+        #btn = st.button(label="GENERATE")
+        btn = st.form_submit_button("GENERATE")
+    
 if btn:
+    placeholder.empty()
     ingredient_input = get_ingredient()
     inspiration_input = get_inspiration()
     
