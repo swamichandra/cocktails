@@ -130,11 +130,6 @@ with placeholder.container():
         btn = st.form_submit_button("GENERATE")
 
     if btn:
-        if 'x' in st.session_state.keys():
-            st.session_state['x']=st.session_state['x']+1
-        else:
-            st.session_state['x']=1
-
         ingredient_input = get_ingredient()
         inspiration_input = get_inspiration()
         
