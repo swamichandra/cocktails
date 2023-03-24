@@ -30,7 +30,7 @@ st.markdown(f""" <style>
 if os.environ["OPENAI_API_KEY"]:
     st.title("Cocktail Maker")
     st.caption("Let generative AI come up with drink recipes")
-else
+else:
     st.error("🔑 Please enter API Key")
 
 cocktail_name = ""
