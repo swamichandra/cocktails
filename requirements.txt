@@ -1,11 +1,4 @@
 streamlit
 langchain
 openai
-unstructured
-python-magic
-chromadb
 pinecone-client
-layoutparser
-layoutmodels
-tesseract
-Pillow
