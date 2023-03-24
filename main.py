@@ -28,7 +28,7 @@ st.markdown(f""" <style>
 
 #START LLM portions
 if os.environ["OPENAI_API_KEY"]:
-    st.title("Cocktail Maker")
+    st.title("Master Mixologist")
     st.caption("Let generative AI come up with drink recipes")
 else:
     st.error("🔑 Please enter API Key")
@@ -152,7 +152,7 @@ if btn:
         with col2:
             st.subheader("How will this drink look?")
             #st.markdown(drink)
-            prompt_4_diffusion = "Backlight alcoholic " + drink + " drink named " + cocktail_name + ". Layered, earthy colors -uplight --s 42000 --ar 4:3 --version 3"
+            prompt_4_diffusion = "Blacklight alcoholic " + drink + " drink named " + cocktail_name + ". Layered, earthy colors -uplight --s 42000 --ar 4:3 --version 3"
             #st.markdown(prompt_4_diffusion.strip())
             print(prompt_4_diffusion)
 
