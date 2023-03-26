@@ -10,6 +10,7 @@ from langchain.chains import LLMChain
 from langchain.chains import SequentialChain
 from langchain.chains import SimpleSequentialChain
 from PIL import Image
+from PIL import ImageGrab
 
 # All of Streamlit config and customization
 st.set_page_config(page_title="Cocktail Maker powered by Generative AI", page_icon=":random:", layout="wide")
@@ -121,8 +122,13 @@ with placeholder.container():
             print(drink)
             if(drink == 'Non-Alcoholic'):
                 NON_ALCOHOLIC_FLAG = True
+                drink = 'Non-Alcoholic Mocktail'
 
         with col2:
+            optional_ingredient = st.multiselect(label='I will pick the ingredients. But any particular ones to include?', options=ingredients,)
+            print(optional_ingredient)
+
+        with col3:
             craziness = st.select_slider('How crazy you want me to go?', options=['crazy', 'crazier', 'craziest'])
 
             if craziness == 'crazier':
@@ -132,10 +138,6 @@ with placeholder.container():
             if craziness == 'craziest':
                 PRESENCE_PENALTY = 2.0
                 FREQUENCY_PENALTY = 2.0
-
-        with col3:
-            optional_ingredient = st.multiselect(label='I will pick the ingredients. But any particular ones to include?', options=ingredients,)
-            print(optional_ingredient)
 
         #btn = st.button(label="GENERATE")
         btn = st.form_submit_button("GENERATE")
@@ -179,25 +181,31 @@ with placeholder.container():
 
             col1, col2 = st.columns(2)
             with col1:
+                st.subheader("Why this " + drink + "?")
+                
                 st.multiselect(
-                    label='Ingredients used in this ' + drink,
+                    label='I used the following ingredients in this ' + drink,
                     options=output['ingredient'].split(", "),
                     default=output['ingredient'].split(", "),
                     disabled=True,
                     )
-                
+
                 st.multiselect(
                     label='Inspired from',
                     options=[output['inspiration'].replace(" ", " ")],
                     default=[output['inspiration'].replace(" ", " ")],
                     disabled=True,
                 )
-
-                st.subheader("Why this " + drink + "?")
                 st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
             
             with col2:
                 st.subheader("Multi-Chain JSON")
                 st.json(output)
+
+#btn_share = st.button("SHARE RECIPE")
+#if(btn_share):
+#    ss_region = (300, 300, 600, 600)
+#    ss_img = ImageGrab.grab(ss_region)
+#    ss_img.save("drink.jpg")
 
 st.caption("Non-Humanoid Developer: Swami Chandrasekaran")
