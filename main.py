@@ -57,7 +57,7 @@ PRESENCE_PENALTY = 1.02
 
 llm = OpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 
-template = """I want someone who can suggest out of the world and imaginative drink recipes. You are my master mixologist. You will come up with crazy and bold alcoholic {drink} that is appealing, attractive, imaginative and never seen before. Use {ingredient} in your recipe. Draw inspiration from an existing cocktail recipe of {inspiration}. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Provide a scientific explanation for why the ingredients were chosen. 
+template = """I want someone who can suggest out of the world and imaginative drink recipes. You are my master mixologist. You will come up with crazy and bold alcoholic {drink} that is appealing, attractive, imaginative and never seen before. Use {ingredient} in your recipe. Draw inspiration from an existing cocktail recipe of {inspiration}. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Provide a scientific explanation for why the ingredients were chosen. Avoid eggs and yolk.
 Cocktail Name: 
 Ingredients:
 Instructions:
