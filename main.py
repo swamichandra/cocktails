@@ -15,6 +15,11 @@ from PIL import ImageGrab
 # All of Streamlit config and customization
 st.set_page_config(page_title="Cocktail Maker powered by Generative AI", page_icon=":random:", layout="wide")
 st.markdown(""" <style>
+ div.stButton > button {{
+        
+        display:inline-block;outline:0;cursor:pointer;border:none;padding:0 56px;height:45px;line-height:45px;border-radius:7px;background-color:#5643CC;width:100%;color:white;font-weight:400;font-size:16px;box-shadow:0 4px 14px 0 rgb(0 118 255 / 39%);transition:background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;:hover{{background:rgba(0,118,255,0.9);box-shadow:0 6px 20px rgb(0 118 255 / 3%)}}
+        
+}}
 #MainMenu {visibility: visible;}
 footer {visibility: hidden;}
 </style> """, unsafe_allow_html=True)
@@ -55,7 +60,8 @@ FREQ_PENALTY = 1.02
 # increasing the model's likelihood to talk about new topics
 PRESENCE_PENALTY = 1.02
 
-llm = OpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
+#llm = OpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
+llm = OpenAIChat(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 
 template = """I want someone who can suggest out of the world and imaginative drink recipes. You are my master mixologist. You will come up with crazy and bold alcoholic {drink} that is appealing, attractive, imaginative and never seen before. Use {ingredient} in your recipe. Draw inspiration from an existing cocktail recipe of {inspiration}. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Provide a scientific explanation for why the ingredients were chosen. Avoid eggs and yolk.
 Cocktail Name: 
