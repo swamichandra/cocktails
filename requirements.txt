@@ -1,5 +1,5 @@
 streamlit
-langchain==0.0.98
+langchain
 openai
 pinecone-client
 pydantic
