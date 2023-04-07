@@ -147,7 +147,7 @@ with placeholder.container():
             print(drink)
             if(drink == 'Non-Alcoholic'):
                 NON_ALCOHOLIC_FLAG = True
-                drink = 'Non-Alcoholic Mocktail'
+                drink = 'Non-Alcoholic Virgin Mocktail'
 
         with col2:
             if NON_ALCOHOLIC_FLAG:
