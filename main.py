@@ -213,7 +213,7 @@ with placeholder.container():
             with col2:
                 st.subheader("How will this drink look?")
                 #st.markdown(drink)
-                prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover --ar 4:3 --v 4"
+                prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover --ar 4:3 --v 4 --c 100"
                 #st.markdown(prompt_4_diffusion.strip())
                 print(prompt_4_diffusion)
 
