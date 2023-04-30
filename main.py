@@ -152,9 +152,9 @@ with placeholder.container():
 
         with col2:
             if NON_ALCOHOLIC_FLAG:
-                optional_ingredient = st.multiselect(label='Optionally, any particular ingredients?', options=ingredients_nonalcoholic,)
+                optional_ingredient = st.multiselect(label='I will pick the ingredients. But any particular ones?', options=ingredients_nonalcoholic,)
             else:
-                optional_ingredient = st.multiselect(label='Optionally, any particular ingredients?', options=ingredients,)
+                optional_ingredient = st.multiselect(label='I will pick the ingredients. But any particular ones?', options=ingredients,)
             print(optional_ingredient)
 
         with col5:
@@ -191,7 +191,8 @@ with placeholder.container():
         ingredient_input = get_ingredient()
         inspiration_input = get_inspiration(drink)
         
-        if len(main_dish) == 0:
+        print(">>>>", len(main_dish))
+        if len(main_dish) <= 0:
             main_dish = 'all dishes'
         
         with st.spinner(text="Building your " + craziness + " " + drink + " recipe ..." + " that pairs well with " + cuisine + " cuisine" + " and pairs well with "+ main_dish):
