@@ -8,49 +8,42 @@ from langchain.llms import OpenAI
 from langchain import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.chains import SequentialChain
+from langchain.chat_models import ChatOpenAI
 from langchain.chains import SimpleSequentialChain
-from PIL import Image
-from PIL import ImageGrab
+import datetime
+import json
+import s3fs
+import boto3
 
 # All of Streamlit config and customization
 st.set_page_config(page_title="Cocktail Maker powered by Generative AI", page_icon=":random:", layout="wide")
 st.markdown(""" <style>
- div.stButton > button {{
-        
-        display:inline-block;outline:0;cursor:pointer;border:none;padding:0 56px;height:45px;line-height:45px;border-radius:7px;background-color:#5643CC;width:100%;color:white;font-weight:400;font-size:16px;box-shadow:0 4px 14px 0 rgb(0 118 255 / 39%);transition:background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;:hover{{background:rgba(0,118,255,0.9);box-shadow:0 6px 20px rgb(0 118 255 / 3%)}}
-        
-}}
 #MainMenu {visibility: visible;}
 footer {visibility: hidden;}
 </style> """, unsafe_allow_html=True)
-padding = 0
-st.markdown(f""" <style>
-    .reportview-container .main .block-container{{
-        padding-top: {padding}rem;
-        padding-right: {padding}rem;
-        padding-left: {padding}rem;
-        padding-bottom: {padding}rem;
-    }} </style> """, unsafe_allow_html=True)
 
-st.markdown(
-    """
-<style>
-.st-au {{
-  font-size: .5rem;
-}}
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
-
+# Remove whitespace from the top of the page and sidebar
+st.markdown("""
+        <style>
+               .block-container {
+                    padding-top: 1rem;
+                    padding-bottom: 0rem;
+                    padding-left: 5rem;
+                    padding-right: 5rem;
+                }
+        </style>
+        """, unsafe_allow_html=True)
 
 with open( "style.css" ) as css: st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 
-#START LLM portions
+#START LLM portions 
+#os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 if os.environ["OPENAI_API_KEY"]:
-    st.title("Master Mixologist")
+    #st.image('logo3.png')
+    st.title("🅼🅰🆂🆃🅴🆁 🅼🅸🆇🅾🅻🅾🅶🅸🆂🆃")
+    #st.title("🅜🅐🅢🅣🅔🅡 🅜🅘🅧🅞🅛🅞🅖🅘🅢🅣")
     st.caption("Let generative AI come up with new drink recipes for you")
 else:
     st.error("🔑 Please enter API Key")
@@ -75,33 +68,34 @@ FREQ_PENALTY = 1.02
 # increasing the model's likelihood to talk about new topics
 PRESENCE_PENALTY = 1.02
 
-llm = OpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
+#llm = OpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
+llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 #llm = OpenAIChat(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 
-template = """I want someone who can suggest out of the world and imaginative drink recipes. You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing and pairs well with the {cuisine} cuisine. Use {ingredient} in your recipe. Draw inspiration from an existing cocktail recipe of {inspiration}. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Provide a scientific explanation for why the ingredients were chosen. Do not include eggs and yolk as ingredients.
+template = """I want someone who can suggest out of the world and imaginative drink recipes. You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing and pairs well with the {cuisine} cuisine. Ensure the drink pairs well with {main_dish}. Use {ingredient} in your recipe. Draw inspiration from an existing cocktail recipe of {inspiration}. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Provide a scientific explanation for why the ingredients were chosen. Do not include eggs and yolk as ingredients. {additional_instructions}.
 Cocktail Name: 
 Ingredients:
 Instructions:
 Rationale:###
 """
 
-prompt_4_cocktail = PromptTemplate(input_variables=["drink", "ingredient", "inspiration", "cuisine"],template=template.strip(),)
+prompt_4_cocktail = PromptTemplate(input_variables=["drink", "ingredient", "inspiration", "cuisine", "additional_instructions", "main_dish"], template=template.strip(),)
 cocktail_gen_chain = LLMChain(llm=llm, prompt=prompt_4_cocktail, output_key="cocktail", verbose=True)
 
-#This is an LLMChain to generate a short haiku poem for the cocktail based on the ingredients.
+#This is an LLMChain to generate a short haiku caption for the cocktail based on the ingredients.
 llm = OpenAI(model_name=SECONDARY_MODEL, temperature=0.7, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=200, best_of=3, top_p=0.5)
 
 template2 = """###Write a restaurant menu style short description for a {drink} that has the following ingredients {ingredient} and pairs well with {cuisine} cuisine###."""
 
-prompt_4_poem = PromptTemplate(input_variables=["drink", "ingredient", "cuisine"], template=template2.strip(),)
-cocktail_poem_chain = LLMChain(llm=llm, prompt=prompt_4_poem, output_key="poem", verbose=True)
+prompt_4_caption = PromptTemplate(input_variables=["drink", "ingredient", "cuisine"], template=template2.strip(),)
+cocktail_caption_chain = LLMChain(llm=llm, prompt=prompt_4_caption, output_key="caption", verbose=True)
 
 #This is the overall chain where we run these two chains in sequence.
 overall_chain = SequentialChain(
-    chains=[cocktail_gen_chain, cocktail_poem_chain],
-    input_variables=['drink', 'ingredient', 'inspiration', 'cuisine'],
+    chains=[cocktail_gen_chain, cocktail_caption_chain],
+    input_variables=['drink', 'ingredient', 'inspiration', 'cuisine', 'additional_instructions', 'main_dish'],
     # Here we return multiple variables
-    output_variables=['cocktail', 'poem'],
+    output_variables=['cocktail', 'caption'],
     verbose=True)
 #END LLM portions
 
@@ -115,13 +109,14 @@ ingredients_nonalcoholic = sorted(ingredients_nonalcoholic)
 
 inspiration = ['#3 Cup', '#8', '100 Year Punch', '20th Century', '212', '21st Century', 'Absinthe Drip', 'Against All Odds Cocktail', 'Aguila Azteca', 'Airmail', 'Albert Mathieu', 'Algonquin', 'Americano Highball', 'Aperol Spritz', 'Apple Daiquiri', 'Apple Malt Toddy', 'Applejack Rabbit', 'Apricot Flip', 'Archangel', 'Astoria Bianco', 'Aviation', 'Beachbum', 'Bees Knees', 'Bees Sip', 'Beer Cassis', 'Beer and a Smoke', 'Bentons Old-Fashioned', 'Berlioni', 'Betsy Ross', 'Betula', 'Bijou', 'Bizet', 'Black Flip', 'Black Jack', 'Black Thorn (Irish)', 'Blackbeard', 'Blackstar', 'Blackthorn (English)', 'Blackthorn Rose', 'Blinker', 'Blood and Sand', 'Bobby Burns', 'Brandy Crusta', 'Brazilian Tea Punch', 'Brewers Breakfast', 'Bronx', 'Brooklyn', 'Brown Bomber', 'Brown Derby', 'Bubbaloo', 'Buona Notte', 'Caipirinha', 'Camerons Kick', 'Caprice', 'Cavalier', 'Champagne Cocktail', 'Champs-Elysees', 'Cherry Pop', 'Chien Chaud', 'Chrysanthemum', 'Cinema Highball', 'Cloister', 'Clover Club', 'Coconut Colada', 'Coda', 'Coke', 'Coffee Cocktail', 'Condiment Cocktail', 'Conquistador', 'Corpse Reviver No. 2', 'Cosmopolitan', 'Cranberry Cobbler', 'Crimson Tide', 'Cuzco', 'Daiquiri', 'De La Louisiane', 'Death Bed', 'Desert Rose', 'Deshler', 'Dewey D.', 'Diamondback', 'Donizetti', 'Dry County Cocktail', 'Duboudreau Cocktail', 'Dulce de Leche', 'East India Cocktail', 'East Village Athletic Club Cocktail', 'Eclipse Cocktail', 'Edgewood', 'El Burro', 'El Diablo', 'El Molino', 'El Puente', 'Ephemeral', 'Espresso Bongo', 'Falling Leaves', 'Field Cocktail', 'Figetaboutit', 'Fish House Punch', 'Flora Astoria', 'Flying Dutchman', 'Fog Cutter', 'Foreign Legion', 'Framboise Fizz', 'Frankfort Rose', 'French 75', 'French Maid', 'Fresa Verde', 'Frisco', 'Gilchrist', 'Gimlet', 'Gin & Tonic', 'Girl from Jerez', 'Gold Coast', 'Gold Rush', 'Golden Star Fizz', 'Great Pumpkin', 'Green Deacon', 'Green Harvest', 'Greenpoint', 'Hanky Panky', 'Harvest Moon', 'Harvest Sling', 'Heirloom', 'Hemingway Daiquiri', 'Henry Hudson', 'Honeymoon Cocktail', 'Hot Buttered Pisco', 'Hotel D Alsace', 'Hotel Nacional Special', 'Imperial Blueberry Fizz', 'Imperial Silver Corn Fizz', 'Improved Whiskey Cocktail', 'Jack Rose', 'Japanese Cocktail', 'Japanese Courage', 'Jimmie Roosevelt', 'Johnny Apple Collins', 'Judgment Day', 'Junior', 'Kansai Kick', 'Kin Kan', 'Kina Miele', 'King Bee', 'Koyo', 'L.E.S. Globetrotter', 'La Florida Cocktail', 'La Louche', 'La Perla', 'Lacrimosa', 'Lake George', 'Last Word', 'Lawn Dart', 'Le Pere Bis', 'Leapfrog', 'Left Coast', 'Left Hand Cocktail', 'Lions Tooth', 'Little Bit Country', 'Luau', 'Mae West Royal Diamond Fizz', 'Mai-Tai', 'Manhattan', 'Margarita', 'Mariner', 'Martinez', 'Martini', 'Mary Pickford', 'Masataka Swizzle', 'Master Cleanse', 'May Daisy', 'May Day', 'Melon Stand', 'Mexicano', 'Mezcal Mule', 'Midnight Express', 'Milk Punch', 'Mint Apple Crisp', 'Mint Julep', 'Mojito', 'Monkey Gland', 'Montgomery Smith', 'Morango Fizz', 'Moscow Mule', 'Mount Vernon', 'Mums Apple Pie', 'Navy Grog', 'Negroni', 'New Amsterdam', 'New York Flip', 'Newark', 'Newfangled', 'Nigori Milk Punch', 'Noce Royale', 'Norman Inversion', 'Nouveau Carre', 'Nouveau Sangaree', 'Noval Cup', 'Nth Degree', 'Occidental', 'Old Flame', 'Old Maid', 'Old Pal', 'Old-Fashioned Whiskey Cocktail', 'Opera Cocktail', 'Paddington', 'Paddy Wallbanger', 'Paloma', 'Parkside Fizz', 'Pauls Club Cocktail', 'Pearl Button', 'Pearl of Puebla', 'Perfect Pear', 'Persephone', 'Pharaoh Cooler', 'Pimms Cup', 'Pink Lady', 'Pisco Sour', 'Platanos en Mole Old Fashioned', 'Primavera', 'Prince Edward', 'Prince of Wales', 'Professor', 'Pumpkin Toddy', 'Queen Park Swizzle', 'Rack & Rye', 'Ramos Gin Fizz', 'Rapscallion', 'Raspberries Reaching', 'Rattlesnake', 'Red Devil', 'Red-headed Saint', 'Remember Maine', 'Remember the Maine', 'Resting Point', 'Reverend Palmer', 'Rhubarbarita', 'Rhum Club', 'Rio Bravo', 'Rite of Spring', 'Rob Roy', 'Romeo Y Julieta', 'Rose', 'Rosita', 'Royal Bermuda Yachtclub Cocktail', 'Rust Belt', 'Rusty Nail', 'Rye Witch', 'Sage Old Buck', 'Sazerac', 'Seelbach Cocktail', 'Shaddock Rose', 'Shiso Delicious', 'Shiso Malt Sour', 'Sidecar', 'Siesta', 'Silk Road', 'Silver Lining', 'Silver Root Beer Fizz', 'Silver Sangaree', 'Singapore Sling', 'Single Malt Sangaree', 'Sloe Gin Fizz', 'Smoky Grove', 'Solstice', 'South Slope', 'Southside', 'Spice Market', 'St. Rita', 'Staggerac', 'Statesman', 'Swiss Mist', 'Swollen Gland', 'T&T', 'Talbott Leaf', 'Tao of Pooh', 'There Will Be Blood', 'Ti-Punch', 'Tipperary Cocktail', 'Tom Collins', 'Tommys Margarita', 'Triborough', 'Trident', 'Tuxedo', 'Up to Date', 'Vaccari', 'Vauvert Slim', 'Velvet Club', 'Vesper', 'Vieux Carre', 'Vieux Mot', 'Ward Eight', 'Water Lily', 'Weeski', 'Wellington Fizz', 'Whiskey Smash', 'White Birch Fizz', 'White Lady', 'White Negroni', 'Widows Kiss', 'Witchs Kiss', 'Woolworth', 'Wrong Aisle', 'Zombie Punch']
 
-inspiration_nonalcoholic = ['Arnold Palmer', 'Cinderella', 'Club Soda & Lime', 'Coconut Water', 'Faux Tropical Fizz', 'Frozen Blackberry Smoothie', 'Ginger Beer', 'Gunner', 'Iced Tea', 'Kombucha', 'Lassi', 'Lemon, Lime & Bitters', 'Lemonade', 'Mango Lassi', 'Mock Champagne', 'Mocktail Mulled Wine', 'No Tequila Sunrise', 'Nojito', 'Non-Alcoholic Irish Creme Liqueur', 'Pineapple & Ginger Punch', 'Roy Rogers', 'Safe Sex On The Beach', 'Shirley Temple', 'Sidecar Mocktail', 'Summer Cup Mocktail', 'Tortuga', 'Virgin Margarita', 'Virgin Mary (Bloody Mary Mocktail)', 'Virgin Moscow Mule', 'Virgin Piña Colada', 'Virgin Strawberry Daiquiri', ]
+inspiration_nonalcoholic = ['Club Soda & Lime', 'Coconut Water', 'Faux Tropical Fizz', 'Frozen Blackberry Smoothie', 'Ginger Beer', 'Gunner', 'Iced Tea', 'Kombucha', 'Lassi', 'Lemon, Lime & Bitters', 'Lemonade', 'Mango Lassi', 'Nojito', 'Pineapple & Ginger Punch', 'Sidecar Mocktail', 'Summer Cup Mocktail', 'Tortuga', 'Piña Colada', 'Strawberry Milkshake', 'Chill-Out Honeydew Cucumber Slushy', 'Salted Watermelon Juice', 'Chile-Lime-Pineapple Soda', 'Strawberry-Ginger Lemonade', 'Huckleberry Shrub', 'Chai Blossom', 'Maple-Ginger Cider Switchel', 'Turmeric Tonic', 'Homemade Hawaiian Ginger Ale', 'Spicy Citrus Refresher', 'Better Than Celery Juice', 'Beet-Sumac Soda', 'Raspberry-Almond Soda', 'Salted Meyer Lemon and Sage Pressé', 'Lemon-Ginger Brew']
 
 cuisine_list = ['All Occasions', 'Chinese', 'Greek', 'Indian', 'Italian', 'Japanese', 'American', 'Mexican', 'Thai', 'Mediterranean']
 cuisine_list = sorted(cuisine_list)
 
 NON_ALCOHOLIC_FLAG = False
 drink = ''
+main_dish = 'all dishes'
 
 def get_ingredient():
     if(drink == 'Non-Alcoholic'):
@@ -146,14 +141,14 @@ placeholder = st.empty()
 
 with placeholder.container():
     with st.form('app'):
-        col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+        col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
 
         with col1:
             drink = st.selectbox('Type of drink', options=['Cocktail', 'Shot', 'Punch', 'Non-Alcoholic'])
             print(drink)
             if(drink == 'Non-Alcoholic'):
                 NON_ALCOHOLIC_FLAG = True
-                drink = 'No Alcohol Mocktail'
+                #drink = 'No Alcohol Mocktail'
 
         with col2:
             if NON_ALCOHOLIC_FLAG:
@@ -162,7 +157,7 @@ with placeholder.container():
                 optional_ingredient = st.multiselect(label='I will pick the ingredients. But any particular ones?', options=ingredients,)
             print(optional_ingredient)
 
-        with col4:
+        with col5:
             craziness = st.select_slider('How crazy you want me to go?', options=['crazy', 'crazier', 'craziest'])
 
             if craziness == 'crazier':
@@ -174,7 +169,7 @@ with placeholder.container():
                 FREQUENCY_PENALTY = 2.0
 
         with col3:
-            cuisine = st.selectbox('Cusine to pair with', options=cuisine_list)
+            cuisine = st.selectbox('Optionally, cusine to pair with', options=cuisine_list)
             print(cuisine)
 
             if craziness == 'crazier':
@@ -184,6 +179,9 @@ with placeholder.container():
             if craziness == 'craziest':
                 PRESENCE_PENALTY = 2.0
                 FREQUENCY_PENALTY = 2.0
+        
+        with col4:
+            main_dish = st.text_input("Optionally, main dish to pair with")
 
         #btn = st.button(label="GENERATE")
         print(NON_ALCOHOLIC_FLAG)
@@ -193,14 +191,21 @@ with placeholder.container():
         ingredient_input = get_ingredient()
         inspiration_input = get_inspiration(drink)
         
-        with st.spinner(text="Building your " + craziness + " " + drink + " recipe ..." + " that pairs well with " + cuisine + " cuisine"):
-            output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name, 'cuisine': cuisine})
+        if len(main_dish) == 0:
+            main_dish = 'all dishes'
+        
+        with st.spinner(text="Building your " + craziness + " " + drink + " recipe ..." + " that pairs well with " + cuisine + " cuisine" + " and pairs well with "+ main_dish):
+            if NON_ALCOHOLIC_FLAG:
+                output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'Do not include any alcohol. No whiskey, cognac, spirits, VSOP, wine, bourbon, gin, scotch, beer in the ingredients'})
+            else:
+                output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'', 'main_dish': main_dish})
             print(output)
             cocktail_name = output['cocktail'][:output['cocktail'].index("Ingredients")]
             cocktail_name = cocktail_name.strip().partition("Cocktail Name:")[2].strip()
             output['cocktail_name'] = cocktail_name
             #st.header(cocktail_name)
             #print(cocktail_name)
+            
             st.header(cocktail_name)
 
             col1, col2 = st.columns(2)
@@ -215,6 +220,9 @@ with placeholder.container():
                 #st.markdown(drink)
                 prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover --ar 4:3 --v 4 --c 100"
                 #st.markdown(prompt_4_diffusion.strip())
+                #st.button("📷 Share")# take screenshot using pyautogui
+                #image = pyautogui.screenshot()
+                #image.show()  # Show the image using the default image viewer
                 print(prompt_4_diffusion)
 
                 kwargs = {
@@ -224,31 +232,43 @@ with placeholder.container():
                 image_resp = openai.Image.create(**kwargs)
                 image_url = image_resp['data'][0]['url']
                 st.image(image_url)
-                st.caption(output['poem'].strip())
+                st.caption(output['caption'].strip())
 
             col1, col2 = st.columns(2)
             with col1:
-                st.subheader("Why this " + drink + "?")
+                st.subheader("How did I come up with this?")
+                st.markdown(f"""###### Inpiration for this {drink} came from **{output['inspiration'].replace(" ", " ")}**""")
+                st.markdown("I used the following ingredients in this " + drink)
+                #print(output['ingredient'])
+                #st.markdown(output['ingredient'].split(", "))
+                #st.markdown(output['ingredient'])
+                    
+                for i in output['ingredient'].rstrip().split(", "):
+                    #st.markdown(f"""<div class='ph3'>""", unsafe_allow_html=True,)
+                    st.markdown(f"""🔹 {i}\n""", unsafe_allow_html=True,)
+                    #st.markdown(f"""</div>""", unsafe_allow_html=True,)
                 
-                st.multiselect(
-                    label='I used the following ingredients in this ' + drink,
-                    options=output['ingredient'].split(", "),
-                    default=output['ingredient'].split(", "),
-                    disabled=True,
-                    )
+                #st.markdown(f"""<div class='ph3'><a class="f6 link dim br-pill ba ph3 pv2 mb2 dib dark-blue" href="#0">{}</a></div>""", unsafe_allow_html=True,)
 
-                st.multiselect(
-                    label='Inspired from',
-                    options=[output['inspiration'].replace(" ", " ")],
-                    default=[output['inspiration'].replace(" ", " ")],
-                    disabled=True,
-                )
                 st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
             
             with col2:
-                st.subheader("Multi-Chain JSON")
+                st.subheader("Under the Covers: Goal, Plan & Chain ")
+                st.markdown(f"""###### Goal: Come up with an olfactory pleasant {drink}""")
+                st.markdown(f"""**Plan**: Draw Inspiration ➺ Pick Ingredients ➺ Generate Drink ➺ Mixing Instructions ➺ Visualize Drink ➺ Provide Explanation""")
                 st.json(output)
+                
+            # Create an S3 Client 
+            s3_client = boto3.client('s3') 
 
+            # Data to be written to S3 Bucket 
+            # Convert Data to JSON 
+            json_data = json.dumps(output)
+            
+            s3_key = cocktail_name.replace(" ", "_") + '_' + datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+            # Write JSON to S3 Bucket 
+            s3_client.put_object(Body = json_data, Bucket = 'mixologist', Key = str(s3_key) + '.json', ContentType = 'application/json')
 #btn_share = st.button("SHARE RECIPE")
 #if(btn_share):
 #    ss_region = (300, 300, 600, 600)
