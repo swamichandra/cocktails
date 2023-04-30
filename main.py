@@ -152,9 +152,9 @@ with placeholder.container():
 
         with col2:
             if NON_ALCOHOLIC_FLAG:
-                optional_ingredient = st.multiselect(label='I will pick the ingredients. Any particular ones?', options=ingredients_nonalcoholic,)
+                optional_ingredient = st.multiselect(label='Optionally, any particular ingredients?', options=ingredients_nonalcoholic,)
             else:
-                optional_ingredient = st.multiselect(label='I will pick the ingredients. Any particular ones?', options=ingredients,)
+                optional_ingredient = st.multiselect(label='Optionally, any particular ingredients?', options=ingredients,)
             print(optional_ingredient)
 
         with col5:
