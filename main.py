@@ -48,6 +48,7 @@ else:
     st.error("🔑 Please enter API Key")
 
 cocktail_name = ""
+citations = ""
 
 # Available Models
 LANGUAGE_MODELS = ['gpt-3.5-turbo', 'text-davinci-003', 'text-curie-001', 'text-babbage-001', 'text-ada-001']
@@ -250,7 +251,9 @@ with placeholder.container():
                     #st.markdown(f"""</div>""", unsafe_allow_html=True,)
                 
                 #st.markdown(f"""<div class='ph3'><a class="f6 link dim br-pill ba ph3 pv2 mb2 dib dark-blue" href="#0">{}</a></div>""", unsafe_allow_html=True,)
-
+                
+                #st.markdown(output['cocktail'].strip().partition("Citations:")[2])
+                
                 st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
             
             with col2:
