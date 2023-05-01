@@ -37,7 +37,10 @@ st.markdown("""
 with open( "style.css" ) as css: st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 
 #START LLM portions 
-os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+if os.getenv("OPENAI_API_KEY") is not None:
+    pass
+else:
+    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 if os.environ["OPENAI_API_KEY"]:
     #st.image('logo3.png')
