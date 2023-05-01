@@ -71,10 +71,11 @@ PRESENCE_PENALTY = 1.02
 llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 #llm = OpenAIChat(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 
-template = """I want someone who can suggest out of the world and imaginative drink recipes. You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing and pairs well with the {cuisine} cuisine. Ensure the drink pairs well with {main_dish}. Use {ingredient} in your recipe. Avoid eggs. Draw inspiration from an existing cocktail recipe of {inspiration}. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Provide a scientific explanation for why the ingredients were chosen. Do not include whole eggs or yolk as ingredients. {additional_instructions}.
+template = """I want someone who can suggest out of the world and imaginative drink recipes. You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing and pairs well with the {cuisine} cuisine. Ensure the drink pairs well with {main_dish}. Use {ingredient} in your recipe. Avoid eggs. Draw inspiration from an existing cocktail recipe of {inspiration}. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Provide a scientific explanation for why the ingredients were chosen.  Do not include whole eggs or yolk as ingredients. {additional_instructions}. Provide evidence and citations for where you took the recipe from.
 Cocktail Name: 
 Ingredients:
 Instructions:
+Evidence:
 Rationale:###
 """
 
