@@ -195,13 +195,13 @@ with placeholder.container():
         ingredient_input = get_ingredient()
         inspiration_input = get_inspiration(drink)
         
-        print(">>>>", len(main_dish))
+        #print(">>>>", len(main_dish))
         if len(main_dish) <= 0:
             main_dish = 'all dishes'
         
         with st.spinner(text="Building your " + craziness + " " + drink + " recipe ..." + " that pairs well with " + cuisine + " cuisine" + " and pairs well with "+ main_dish):
             if NON_ALCOHOLIC_FLAG:
-                output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'Do not include any alcohol. No whiskey, cognac, spirits, VSOP, wine, bourbon, gin, scotch, beer in the ingredients'})
+                output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'Do not include any alcohol. No whiskey, cognac, spirits, VSOP, wine, bourbon, gin, scotch, beer in the ingredients', 'main_dish': main_dish})
             else:
                 output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'', 'main_dish': main_dish})
             print(output)
