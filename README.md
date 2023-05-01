@@ -47,3 +47,5 @@ This is an example generative AI app that will help you create the perfect drink
    ```
 
 You should now be able to access the app at [http://localhost:8501](http://localhost:8501)!
+
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
