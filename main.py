@@ -149,7 +149,7 @@ with placeholder.container():
 
         with col1:
             drink = st.selectbox('Type of drink', options=['Cocktail', 'Shot', 'Punch', 'Non-Alcoholic'])
-            print(drink)
+            #print(drink)
             if(drink == 'Non-Alcoholic'):
                 NON_ALCOHOLIC_FLAG = True
                 #drink = 'No Alcohol Mocktail'
@@ -159,7 +159,7 @@ with placeholder.container():
                 optional_ingredient = st.multiselect(label='Optionally, any particular ingredients?', options=ingredients_nonalcoholic,)
             else:
                 optional_ingredient = st.multiselect(label='Optionally, any particular ingredients?', options=ingredients,)
-            print(optional_ingredient)
+            #print(optional_ingredient)
 
         with col5:
             craziness = st.select_slider('How crazy you want me to go?', options=['crazy', 'crazier', 'craziest'])
@@ -174,7 +174,7 @@ with placeholder.container():
 
         with col3:
             cuisine = st.selectbox('Optionally, cusine to pair with', options=cuisine_list)
-            print(cuisine)
+            #print(cuisine)
 
             if craziness == 'crazier':
                 PRESENCE_PENALTY = 1.5
@@ -188,7 +188,7 @@ with placeholder.container():
             main_dish = st.text_input("Optionally, main dish to pair with")
 
         #btn = st.button(label="GENERATE")
-        print(NON_ALCOHOLIC_FLAG)
+        #print(NON_ALCOHOLIC_FLAG)
         btn = st.form_submit_button("GENERATE")
 
     if btn:
@@ -199,12 +199,17 @@ with placeholder.container():
         if len(main_dish) <= 0:
             main_dish = 'all dishes'
         
+        #print("*******LLM Prompt")
+        #print(prompt_4_cocktail)
+        
         with st.spinner(text="Building your " + craziness + " " + drink + " recipe ..." + " that pairs well with " + cuisine + " cuisine" + " and pairs well with "+ main_dish):
             if NON_ALCOHOLIC_FLAG:
                 output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'Do not include any alcohol. No whiskey, cognac, spirits, VSOP, wine, bourbon, gin, scotch, beer in the ingredients', 'main_dish': main_dish})
             else:
                 output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'inspiration': inspiration_input, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'', 'main_dish': main_dish})
+            print("*******")
             print(output)
+            print("*******")
             cocktail_name = output['cocktail'][:output['cocktail'].index("Ingredients")]
             cocktail_name = cocktail_name.strip().partition("Cocktail Name:")[2].strip()
             output['cocktail_name'] = cocktail_name
@@ -223,6 +228,7 @@ with placeholder.container():
             with col2:
                 st.subheader("How will this drink look?")
                 #st.markdown(drink)
+                print("*******Diffusion Prompt")
                 prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover --ar 4:3 --v 4 --c 100"
                 #st.markdown(prompt_4_diffusion.strip())
                 #st.button("📷 Share")# take screenshot using pyautogui
