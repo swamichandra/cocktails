@@ -17,6 +17,9 @@ import boto3
 
 # All of Streamlit config and customization
 st.set_page_config(page_title="Cocktail Maker powered by Generative AI", page_icon=":random:", layout="wide")
+ss = st.session_state
+if 'debug' not in ss:
+    ss['debug'] = {}
 st.markdown(""" <style>
 #MainMenu {visibility: visible;}
 footer {visibility: hidden;}
