@@ -47,7 +47,7 @@ else:
 
 if os.environ["OPENAI_API_KEY"]:
     #st.image('logo3.png')
-    st.title("🅼🅰🆂🆃🅴🆁 🅼🅸🆇🅾🅻🅾🅶🅸🆂🆃")
+    st.title("🅼🅐🆂🆃🅴🆁 🅼🅘🆇🅾🅻🅾🅶🅸🆂🆃")
     #st.title("🅜🅐🅢🅣🅔🅡 🅜🅘🅧🅞🅛🅞🅖🅘🅢🅣")
     st.caption("Let generative AI come up with new drink recipes for you")
 else:
@@ -103,17 +103,17 @@ overall_chain = SequentialChain(
 
 
 # From here down is all the StreamLit UI.
-occasion_list = ["Wedding", "Birthday", "Anniversary", "Team Event", "Party", "Thanksgiving", "Retirement", "Valentine’s Day", "Mother’s Day", "Father’s Day", "Halloween", "Labor Day"]
+occasion_list = ["Wedding", "Birthday", "Anniversary", "Team Event", "Party", "Thanksgiving", "Retirement", "Valentine’s Day", "Mother’s Day", "Father’s Day", "Halloween", "Labor Day", "All Occasions"]
 occasion_list = sorted(occasion_list)
 
 
-ingredients = ['Chocolate Syrup', 'Vodka', 'Coffee Concentrate', 'Agave', 'Apple', 'Single Malt Scotch', 'Rum', 'Gin', 'Whiskey', 'Blueberry', 'Buttermilk', 'Cherry', 'Tea', 'Cinnamon Stick', 'Clove', 'Club Soda', 'Coca-Cola Classic', 'Tequila', 'Root Beer', 'Orange', 'Bourbon', 'Honey', 'Lavender', 'Lemon', 'Lemon Peel', 'Mint Leaves', 'Wine', 'Whisky', 'Brandy', 'Grappa', 'Port', 'Sherry', 'Vermouth', 'Pisco']
+ingredients = ['Chocolate Syrup', 'Vodka', 'Coffee Concentrate', 'Agave', 'Apple', 'Single Malt Scotch', 'Rum', 'Gin', 'Blueberry', 'Buttermilk', 'Cherry', 'Tea', 'Cinnamon Stick', 'Clove', 'Club Soda', 'Coca-Cola Classic', 'Tequila', 'Root Beer', 'Orange', 'Bourbon', 'Honey', 'Lavender', 'Lemon', 'Mint Leaves', 'Wine', 'Whisky', 'Brandy', 'Grappa', 'Port', 'Sherry', 'Vermouth', 'Pisco']
 ingredients = sorted(ingredients)
 
 ingredients_nonalcoholic = ['Agave', 'Coffee Concentrate', 'Apple', 'Banana', 'Blackberries', 'Blueberries', 'Buttermilk', 'Club Soda', 'Cocktail Umbrellas', 'Coke', 'Edible Flowers', 'Grapefruit Juice', 'Honey Syrup', 'Lassi', 'Lavender', 'Lemon', 'Lemon Juice', 'Lemon and Lime Zest', 'Lime Juice', 'Lyre American Malt', 'Mango Lassi', 'Mape Syrup', 'Maraschino Cherry', 'Mint Leaves', 'Orange', 'Orange Juice', 'Peach', 'Pear', 'Pepsi', 'Pineapple', 'Pineapple Juice', 'Raspberries', 'Ritual Gin', 'Ritual Tequila', 'Rosemary', 'Sage', 'Salt Lassi', 'Seedlip', 'Strawberries', 'Thyme', 'Tonic Water', 'Yogurt']
 ingredients_nonalcoholic = sorted(ingredients_nonalcoholic)
 
-cuisine_list = ['All Occasions', 'Chinese', 'Greek', 'Indian', 'Italian', 'Japanese', 'American', 'Mexican', 'Thai', 'Mediterranean']
+cuisine_list = ['All', 'Chinese', 'Greek', 'Indian', 'Italian', 'Japanese', 'American', 'Mexican', 'Thai', 'Mediterranean']
 cuisine_list = sorted(cuisine_list)
 
 NON_ALCOHOLIC_FLAG = False
@@ -122,7 +122,7 @@ main_dish = 'all dishes'
 
 def get_ingredient():
     if(drink == 'Non-Alcoholic'):
-        input_text = ', '.join(random.choices(ingredients_nonalcoholic, k=1)) + ", " + ', '.join(optional_ingredient)
+        input_text = ', '.join(random.choices(ingredients_nonalcoholic, k=3)) + ", " + ', '.join(optional_ingredient)
     else:
         input_text = ', '.join(random.choices(ingredients, k=1)) + ", " + ', '.join(optional_ingredient)
     return input_text
@@ -142,21 +142,21 @@ with placeholder.container():
             if(drink == 'Non-Alcoholic'):
                 NON_ALCOHOLIC_FLAG = True
                 #drink = 'No Alcohol Mocktail'
+                
+        with col2:
+            occasion = st.selectbox('What is the occasion?', options=occasion_list)
 
         with col4:
+            cuisine = st.selectbox('Optionally, cusine to pair with', options=cuisine_list)
+            #print(cuisine)
+            
+        with col3:
             if NON_ALCOHOLIC_FLAG:
                 optional_ingredient = st.multiselect(label='Optionally, any particular ingredients?', options=ingredients_nonalcoholic,)
             else:
                 optional_ingredient = st.multiselect(label='Optionally, any particular ingredients?', options=ingredients,)
             #print(optional_ingredient)
 
-        with col2:
-            occasion = st.selectbox('What is the occasion?', options=occasion_list)
-
-        with col3:
-            cuisine = st.selectbox('Optionally, cusine to pair with', options=cuisine_list)
-            #print(cuisine)
-        
         with col5:
             main_dish = st.text_input("Optionally, main dish to pair with")
 
