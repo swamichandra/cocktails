@@ -1,6 +1,7 @@
 """Python file to serve as the frontend"""
 import random
 import os
+import css
 import re
 import openai
 import streamlit as st
@@ -17,6 +18,7 @@ import boto3
 
 # All of Streamlit config and customization
 st.set_page_config(page_title="Cocktail Maker powered by Generative AI", page_icon=":random:", layout="wide")
+st.write(f'<style>{css.v1}</style>', unsafe_allow_html=True)
 ss = st.session_state
 if 'debug' not in ss:
     ss['debug'] = {}
@@ -37,8 +39,6 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
-with open( "style.css" ) as css: st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
-
 #START LLM portions 
 if os.getenv("OPENAI_API_KEY") is not None:
     pass
@@ -47,8 +47,8 @@ else:
 
 if os.environ["OPENAI_API_KEY"]:
     #st.image('logo3.png')
-    st.title("🅼🅐🆂🆃🅴🆁 🅼🅘🆇🅾🅻🅾🅶🅸🆂🆃")
-    #st.title("🅜🅐🅢🅣🅔🅡 🅜🅘🅧🅞🅛🅞🅖🅘🅢🅣")
+    st.title("🅼🅰️🆂🆃🅴🆁 🅼🅸🆇🅾🅻🅾🅶🅸🆂🆃")
+    #st.title("🅜🅰️🅢🅣🅔🅡 🅜ℹ🅧🅞🅛🅞🅖🅘🅢🅣")
     st.caption("Let generative AI come up with new drink recipes for you")
 else:
     st.error("🔑 Please enter API Key")
@@ -160,8 +160,6 @@ with placeholder.container():
         with col5:
             main_dish = st.text_input("Optionally, main dish to pair with")
 
-        #btn = st.button(label="GENERATE")
-        #print(NON_ALCOHOLIC_FLAG)
         btn = st.form_submit_button("GENERATE")
 
     if btn:
@@ -260,10 +258,5 @@ with placeholder.container():
 
             # Write JSON to S3 Bucket 
             s3_client.put_object(Body = json_data, Bucket = 'mixologist', Key = str(s3_key) + '.json', ContentType = 'application/json')
-#btn_share = st.button("SHARE RECIPE")
-#if(btn_share):
-#    ss_region = (300, 300, 600, 600)
-#    ss_img = ImageGrab.grab(ss_region)
-#    ss_img.save("drink.jpg")
 
 st.caption("Non-Humanoid Developer: Swami Chandrasekaran")
