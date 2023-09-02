@@ -174,7 +174,7 @@ with placeholder.container():
         
         with st.spinner(text="Building your "  + drink + " recipe ..." + " that pairs well with " + cuisine + " cuisine" + " and " + main_dish + " for your " + occasion + " occasion."):
             if NON_ALCOHOLIC_FLAG:
-                output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'occasion': occasion, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'Do not include any alcohol. No whiskey, cognac, spirits, VSOP, wine, bourbon, gin, scotch, beer in the ingredients', 'main_dish': main_dish})
+                output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'occasion': occasion, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'Do not include any alcohol. No whisky, cognac, spirits, VSOP, wine, bourbon, gin, scotch, beer in the ingredients', 'main_dish': main_dish})
             else:
                 output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'occasion': occasion, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'', 'main_dish': main_dish})
             print("*******")
@@ -221,7 +221,7 @@ with placeholder.container():
             col1, col2 = st.columns(2)
             with col1:
                 st.subheader("How did I come up with this?")
-                st.markdown("I used the following ingredients in this " + drink)
+                #st.markdown("I used the following ingredients in this " + drink)
                 #print(output['ingredient'])
                 #st.markdown(output['ingredient'].split(", "))
                 #st.markdown(output['ingredient'])
