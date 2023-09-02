@@ -107,7 +107,7 @@ occasion_list = ["Wedding", "Birthday", "Anniversary", "Team Event", "Party", "T
 occasion_list = sorted(occasion_list)
 
 
-ingredients = ['Chocolate Syrup', 'Vodka', 'Coffee Concentrate', 'Agave', 'Apple', 'Single Malt Scotch', 'Rum', 'Gin', 'Blueberry', 'Buttermilk', 'Cherry', 'Tea', 'Cinnamon Stick', 'Clove', 'Club Soda', 'Coca-Cola Classic', 'Tequila', 'Root Beer', 'Orange', 'Bourbon', 'Honey', 'Lavender', 'Lemon', 'Mint Leaves', 'Wine', 'Whisky', 'Brandy', 'Grappa', 'Port', 'Sherry', 'Vermouth', 'Pisco']
+ingredients = ['Vodka', 'Coffee Concentrate', 'Agave', 'Apple Slice', 'Single Malt Scotch', 'Rum', 'Gin', 'Tea', 'Club Soda', 'Coke', 'Tequila', 'Root Beer', 'Orange Slice', 'Bourbon', 'Honey', 'Lemon Twist', 'Mint Leaves', 'Wine', 'Whisky', 'Brandy', 'Grappa', 'Port', 'Sherry', 'Vermouth', 'Pisco']
 ingredients = sorted(ingredients)
 
 ingredients_nonalcoholic = ['Agave', 'Coffee Concentrate', 'Apple', 'Banana', 'Blackberries', 'Blueberries', 'Buttermilk', 'Club Soda', 'Cocktail Umbrellas', 'Coke', 'Edible Flowers', 'Grapefruit Juice', 'Honey Syrup', 'Lassi', 'Lavender', 'Lemon', 'Lemon Juice', 'Lemon and Lime Zest', 'Lime Juice', 'Lyre American Malt', 'Mango Lassi', 'Mape Syrup', 'Maraschino Cherry', 'Mint Leaves', 'Orange', 'Orange Juice', 'Peach', 'Pear', 'Pepsi', 'Pineapple', 'Pineapple Juice', 'Raspberries', 'Ritual Gin', 'Ritual Tequila', 'Rosemary', 'Sage', 'Salt Lassi', 'Seedlip', 'Strawberries', 'Thyme', 'Tonic Water', 'Yogurt']
