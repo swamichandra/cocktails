@@ -1,8 +1,8 @@
 v1 = """
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk&display=swap');
 
 html, body, [class*="css"] {
-    font-family: 'IBM Plex Sans Condensed', sans-serif;
+    font-family: 'Schibsted Grotesk', sans-serif;
 }
 
 div.stButton > button {
@@ -30,7 +30,4 @@ div.stButton > button {
     font-size: 9px !important;
     font-weight : bold;
 }
-
-
-
 """
