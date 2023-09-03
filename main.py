@@ -107,11 +107,9 @@ occasion_list = ["Wedding", "Birthday", "Anniversary", "Team Event", "Party", "T
 occasion_list = sorted(occasion_list)
 
 
-ingredients = ['Vodka', 'Coffee Concentrate', 'Agave', 'Apple Slice', 'Single Malt Scotch', 'Rum', 'Gin', 'Tea', 'Club Soda', 'Coke', 'Tequila', 'Root Beer', 'Orange Slice', 'Bourbon', 'Honey', 'Lemon Twist', 'Mint Leaves', 'Wine', 'Whisky', 'Brandy', 'Grappa', 'Port', 'Sherry', 'Vermouth', 'Pisco']
-ingredients = sorted(ingredients)
+ingredients = ['Agave', 'Bourbon', 'Brandy', 'Gin', 'Grappa', 'Pisco', 'Port', 'Rum', 'Sherry', 'Single Malt Scotch', 'Tequila', 'Vermouth', 'Vodka', 'Whisky', 'Wine', 'Apple Slice', 'Lemon Twist', 'Mint Leaves', 'Orange Slice', 'Club Soda', 'Coffee Concentrate', 'Coke', 'Root Beer', 'Honey']
 
-ingredients_nonalcoholic = ['Agave', 'Coffee Concentrate', 'Apple', 'Banana', 'Blackberries', 'Blueberries', 'Buttermilk', 'Club Soda', 'Cocktail Umbrellas', 'Coke', 'Edible Flowers', 'Grapefruit Juice', 'Honey Syrup', 'Lassi', 'Lavender', 'Lemon', 'Lemon Juice', 'Lemon and Lime Zest', 'Lime Juice', 'Lyre American Malt', 'Mango Lassi', 'Mape Syrup', 'Maraschino Cherry', 'Mint Leaves', 'Orange', 'Orange Juice', 'Peach', 'Pear', 'Pepsi', 'Pineapple', 'Pineapple Juice', 'Raspberries', 'Ritual Gin', 'Ritual Tequila', 'Rosemary', 'Sage', 'Salt Lassi', 'Seedlip', 'Strawberries', 'Thyme', 'Tonic Water', 'Yogurt']
-ingredients_nonalcoholic = sorted(ingredients_nonalcoholic)
+ingredients_nonalcoholic = ['Agave', 'Apple', 'Banana', 'Blackberries', 'Blueberries', 'Buttermilk', 'Club Soda', 'Cocktail Umbrellas', 'Coffee Concentrate', 'Coke', 'Edible Flowers', 'Grapefruit Juice', 'Honey Syrup', 'Lassi', 'Lavender', 'Lemon', 'Lemon Juice', 'Lemon and Lime Zest', 'Lime Juice', 'Lyre American Malt', 'Mango Lassi', 'Mape Syrup', 'Maraschino Cherry', 'Mint Leaves', 'Orange', 'Orange Juice', 'Peach', 'Pear', 'Pepsi', 'Pineapple', 'Pineapple Juice', 'Raspberries', 'Ritual Gin', 'Ritual Tequila', 'Rosemary', 'Sage', 'Salt Lassi', 'Seedlip', 'Strawberries', 'Thyme', 'Tonic Water', 'Yogurt']
 
 cuisine_list = ['All', 'Chinese', 'Greek', 'Indian', 'Italian', 'Japanese', 'American', 'Mexican', 'Thai', 'Mediterranean']
 cuisine_list = sorted(cuisine_list)
@@ -199,7 +197,9 @@ with placeholder.container():
                 st.subheader("How will this drink look?")
                 #st.markdown(drink)
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover. No human images or faces please." 
+                prompt_4_diffusion = "A fantastical  close up magazine photo featuring an alluring illustrated  " + drink + "  called the " + cocktail_name + ". It contains " + ingredient_input + ". with the effect of film photography and graininess for a nostalgic feel."
+                
+                #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover. No human images or faces please." 
                 #--ar 4:3 --v 4 --c 100"
                 #st.markdown(prompt_4_diffusion.strip())
                 #st.button("📷 Share")# take screenshot using pyautogui
