@@ -73,7 +73,7 @@ PRESENCE_PENALTY = 1.02
 
 llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 
-template = """The occasion is a {occasion}. You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable for the {occasion} and pairs well with the {cuisine} cuisine. Ensure the drink pairs well with {main_dish}. Use {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions}. Provide evidence and citations for where you took the recipe from.
+template = """The occasion is a {occasion}. You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for the {occasion}. It must pair well with the {cuisine} cuisine. Also ensure the drink pairs well with {main_dish}. Use {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions}. Provide evidence and citations for where you took the recipe from.
 Cocktail Name: 
 Ingredients:
 Instructions:
@@ -87,7 +87,7 @@ cocktail_gen_chain = LLMChain(llm=llm, prompt=prompt_4_cocktail, output_key="coc
 #This is an LLMChain to generate a short haiku caption for the cocktail based on the ingredients.
 llm = OpenAI(model_name=PRIMARY_MODEL, temperature=0.2, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=75)
 
-template2 = """Write a restaurant menu style description for a {drink} that has the following ingredients {ingredient}, for a {occasion} occasion, and pairs well with {cuisine} cuisine. Strictly 50 words only. Only generate complete sentences. Be crisp and short."""
+template2 = """Write a restaurant menu style description for a {drink} that has the following ingredients {ingredient}, suitable for a {occasion} occasion. It must pair well with {cuisine} cuisine. Strictly 50 words only. Only generate complete sentences. Be crisp and short."""
 
 prompt_4_caption = PromptTemplate(input_variables=["drink", "ingredient", "cuisine", "occasion"], template=template2.strip(),)
 cocktail_caption_chain = LLMChain(llm=llm, prompt=prompt_4_caption, output_key="caption", verbose=True)
@@ -199,7 +199,7 @@ with placeholder.container():
                 st.subheader("How will this drink look?")
                 #st.markdown(drink)
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover" 
+                prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover. No human images or faces please." 
                 #--ar 4:3 --v 4 --c 100"
                 #st.markdown(prompt_4_diffusion.strip())
                 #st.button("📷 Share")# take screenshot using pyautogui
@@ -221,19 +221,6 @@ with placeholder.container():
             col1, col2 = st.columns(2)
             with col1:
                 st.subheader("How did I come up with this?")
-                #st.markdown("I used the following ingredients in this " + drink)
-                #print(output['ingredient'])
-                #st.markdown(output['ingredient'].split(", "))
-                #st.markdown(output['ingredient'])
-                    
-                for i in output['ingredient'].rstrip().split(", "):
-                    #st.markdown(f"""<div class='ph3'>""", unsafe_allow_html=True,)
-                    st.markdown(f"""🔹 {i}\n""", unsafe_allow_html=True,)
-                    #st.markdown(f"""</div>""", unsafe_allow_html=True,)
-                
-                #st.markdown(f"""<div class='ph3'><a class="f6 link dim br-pill ba ph3 pv2 mb2 dib dark-blue" href="#0">{}</a></div>""", unsafe_allow_html=True,)
-                
-                #st.markdown(output['cocktail'].strip().partition("Citations:")[2])
                 
                 try:
                     st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
