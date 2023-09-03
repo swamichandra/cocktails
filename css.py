@@ -6,9 +6,6 @@ html, body, [class*="css"] {
 }
 
 div.stButton > button {
-
-                   
-
                 display: inline-block;
                 outline: 0;
                 cursor: pointer;
@@ -17,26 +14,23 @@ div.stButton > button {
                 height: 45px;
                 line-height: 45px;
                 border-radius: 7px;
-                background-color: #cc4d29;
+                background-color: #54442B;
                 color: white;
                 font-weight: 400;
                 font-size: 16px;
                 box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
                 transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
                 :hover{
-                    background: rgba(0,118,255,0.9);
-                    box-shadow: 0 6px 20px rgb(0 118 255 / 23%);
-                }
-                
-            
-                
-                
-                                     
+                    color: #eee;
+                    box-shadow: 0 6px 20px #54442B;
+                }                       
 }     
 
 .small-font {
     font-size: 9px !important;
     font-weight : bold;
 }
+
+
 
 """
