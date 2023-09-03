@@ -73,7 +73,7 @@ PRESENCE_PENALTY = 1.02
 
 llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 
-template = """The occasion is a {occasion}. You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for the {occasion}. It must pair well with the {cuisine} cuisine. Also ensure the drink pairs well with {main_dish}. Use {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions}. Provide evidence and citations for where you took the recipe from.
+template = """The occasion is a {occasion}. You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for the {occasion}. It must pair well with the {cuisine} cuisine. Also ensure the drink pairs well with {main_dish}. Use {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
 Cocktail Name: 
 Ingredients:
 Instructions:
@@ -190,6 +190,7 @@ with placeholder.container():
             with col1:
                 st.subheader("How to mix this?")
                 ingredients_list = output['cocktail'].strip().partition("Ingredients:")[2]
+                print(output['cocktail'].strip().partition("Ingredients:")[2])
                 ingredients_list = output['cocktail'][:output['cocktail'].index("Rationale")]
                 st.markdown(ingredients_list)
 
@@ -197,7 +198,7 @@ with placeholder.container():
                 st.subheader("How will this drink look?")
                 #st.markdown(drink)
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = "A fantastical  close up magazine photo featuring an alluring illustrated  " + drink + "  called the " + cocktail_name + ". It contains " + ingredient_input + ". with the effect of film photography and graininess for a nostalgic feel."
+                prompt_4_diffusion = "A fantastical close up magazine photo featuring a " + drink + "  named the " + cocktail_name + ". It contains " + ingredient_input + ". with the effect of film photography and graininess for a nostalgic feel."
                 
                 #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover. No human images or faces please." 
                 #--ar 4:3 --v 4 --c 100"
