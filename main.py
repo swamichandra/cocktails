@@ -74,7 +74,7 @@ PRESENCE_PENALTY = 1.02
 llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 
 
-template = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for an occasion that is a {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid meat or eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
+template = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & incorporating elements pertinent to an occasion that is a {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid meat or eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
 Cocktail Name: 
 Ingredients:
 Instructions:
@@ -83,7 +83,7 @@ Rationale:
 Shopping List:
 """
 
-template_new = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for an occasion that is a {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from. The output must be a JSON with following elements: Cocktail Name, Catch Phrase, Ingredients, Instructions, Citations, Shopping List, Rationale, Short Description. Use the drink name and to come up with a restaurant style short writeup."""
+template_new = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for an occasion that is a {occasion}. Incorporate elements pertinent to the occasion. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from. The output must be a JSON with following elements: Cocktail Name, Catch Phrase, Ingredients, Instructions, Citations, Shopping List, Rationale, Short Description. Use the drink name and to come up with a restaurant style short writeup."""
 
 prompt_4_cocktail = PromptTemplate(input_variables=["drink", "ingredient", "occasion", "additional_instructions", "main_dish"], template=template.strip(),)
 cocktail_gen_chain = LLMChain(llm=llm, prompt=prompt_4_cocktail, output_key="cocktail", verbose=True)
@@ -199,7 +199,7 @@ with placeholder.container():
                 stmp = stmp.strip().partition("Shopping List:")[2]
                 
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = "Joan Miró’s inspired magazine photo of a " + drink + "  named the " + cocktail_name + ". It contains " + stmp + ". --ar 2:3"
+                prompt_4_diffusion = "Simplicity ad photo of a " + drink + "  named the " + cocktail_name + ". It contains " + stmp + ". --ar 2:3"
                 
                 #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover. No human images or faces please." 
                 #--ar 4:3 --v 4 --c 100"
