@@ -64,17 +64,47 @@ PRIMARY_MODEL = 'gpt-3.5-turbo' #'gpt-4-0314' ' #"text-davinci-002"
 # Number between -2.0 and 2.0. 
 # Positive values penalize new tokens based on their existing frequency in the text so far, 
 # decreasing the model's likelihood to repeat the same line verbatim.
-FREQ_PENALTY = 1.02
+FREQ_PENALTY = 0
 
 # Number between -2.0 and 2.0. 
 # Positive values penalize new tokens based on whether they appear in the text so far, 
 # increasing the model's likelihood to talk about new topics
-PRESENCE_PENALTY = 1.02
+PRESENCE_PENALTY = 0
 
-llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
+llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=0.15, top_p=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600)
 
+template = """You are a talented mixologist skilled at crafting palate-pleasing drinks. Please suggest a olfactory pleasant {drink} that would pair well with pair well with {main_dish} for a {occasion}. It must  Incorporate {ingredient} in your recipe. Use inexpensive/common ingredients. Avoid meat or eggs or yolk as ingredients. Come up with an original name for the cocktail. {additional_instructions} 
+Cocktail Name:
 
-template = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & incorporating elements that are apt for {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid meat or eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
+Ingredients:
+
+Instructions:
+
+Rationale:
+
+Olfactory Flavor Theory:
+
+Catch Phrase:
+
+Shopping List:
+"""
+
+template_new_3 = """You are a talented mixologist skilled at crafting palate-pleasing drinks. Come up with a olfactory pleasant {drink} that would pair well with pair well with {main_dish} for a {occasion}. It must  Incorporate {ingredient} in your recipe. Use inexpensive/common ingredients. Avoid meat or eggs or yolk as ingredients. Come up with an original name for the cocktail. {additional_instructions} List the ingredients and quantities needed on separate lines. Briefly describe how to prepare the drink. Explain your rationale for choosing each ingredient and how they combine into a tasty beverage, citing any scientific principles of flavor chemistry. Provide a concise "catch phrase" for the cocktail in quotes that captures its essence. Include a shopping list of ingredients at the end
+
+Cocktail Name:
+
+Ingredients:
+
+Instructions:
+
+Citations:
+
+Rationale:
+
+Shopping List:
+"""
+
+template_new_1 = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & incorporating elements that are apt for {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid meat or eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
 Cocktail Name: 
 Ingredients:
 Instructions:
@@ -83,13 +113,13 @@ Rationale:
 Shopping List:
 """
 
-template_new = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for an occasion that is a {occasion}. Incorporate elements pertinent to the occasion. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from. The output must be a JSON with following elements: Cocktail Name, Catch Phrase, Ingredients, Instructions, Citations, Shopping List, Rationale, Short Description. Use the drink name and to come up with a restaurant style short writeup."""
+template_new_2 = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for an occasion that is a {occasion}. Incorporate elements pertinent to the occasion. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from. The output must be a JSON with following elements: Cocktail Name, Catch Phrase, Ingredients, Instructions, Citations, Shopping List, Rationale, Short Description. Use the drink name and to come up with a restaurant style short writeup."""
 
 prompt_4_cocktail = PromptTemplate(input_variables=["drink", "ingredient", "occasion", "additional_instructions", "main_dish"], template=template.strip(),)
 cocktail_gen_chain = LLMChain(llm=llm, prompt=prompt_4_cocktail, output_key="cocktail", verbose=True)
 
 #This is an LLMChain to generate a short haiku caption for the cocktail based on the ingredients.
-llm = OpenAI(model_name=PRIMARY_MODEL, temperature=0.2, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=75)
+llm = OpenAI(model_name=PRIMARY_MODEL, temperature=0.2, top_p=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=75)
 
 template2 = """Write a restaurant menu style description for a {drink} that has the following ingredients {ingredient}, suitable for a {occasion} occasion. It must pair well with {main_dish}. Strictly 50 words only. Only generate complete sentences. Be crisp and short."""
 
@@ -107,7 +137,7 @@ overall_chain = SequentialChain(
 
 
 # From here down is all the StreamLit UI.
-occasion_list = ["Wedding", "Birthday", "Anniversary", "Team Event", "Party", "Thanksgiving", "Retirement", "Valentine’s Day", "Mother’s Day", "Father’s Day", "Halloween", "Labor Day", "All Occasions"]
+occasion_list = ["Family Celebration", "Birthday", "Team Event", "Wedding", "Winter Gathering", "Retirement", "Valentine’s Day", "Holiday Celebration", "Summer Picnic", "Labor Day", "All Occasions"]
 occasion_list = sorted(occasion_list)
 
 
@@ -195,11 +225,8 @@ with placeholder.container():
                 st.subheader("How will this drink look?")
                 #st.markdown(drink)
                 
-                stmp = output['cocktail'].strip().partition("Rationale:")[2]
-                stmp = stmp.strip().partition("Shopping List:")[2]
-                
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = "Cinematic quality, symmetrical arrangements with details of a " + drink + "  named the " + cocktail_name + ". Apt for a " + occasion + " occasion."
+                prompt_4_diffusion = "Realistic studio photographic portrait " + drink + "  named the " + cocktail_name + ". Apt for a " + occasion + " chrome backlighting"
                 
                 #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Apt for " + occasion + ". Magazine cover. No human images or faces please --ar 4:3 --v 4 --c 100"
                 #st.markdown(prompt_4_diffusion.strip())
