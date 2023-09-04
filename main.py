@@ -74,7 +74,7 @@ PRESENCE_PENALTY = 1.02
 llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 
 
-template = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & incorporating elements pertinent to an occasion that is a {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid meat or eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
+template = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & incorporating elements that are apt for {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid meat or eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
 Cocktail Name: 
 Ingredients:
 Instructions:
@@ -199,10 +199,9 @@ with placeholder.container():
                 stmp = stmp.strip().partition("Shopping List:")[2]
                 
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = "Maximilism, cinematic quality, sharp focus, intricate details of a " + drink + "  named the " + cocktail_name + ". Apt for a " + occasion + " occasion."
+                prompt_4_diffusion = "Cinematic quality, symmetrical arrangements with details of a " + drink + "  named the " + cocktail_name + ". Apt for a " + occasion + " occasion."
                 
-                #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover. No human images or faces please." 
-                #--ar 4:3 --v 4 --c 100"
+                #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Apt for " + occasion + ". Magazine cover. No human images or faces please --ar 4:3 --v 4 --c 100"
                 #st.markdown(prompt_4_diffusion.strip())
                 #st.button("📷 Share")# take screenshot using pyautogui
                 #image = pyautogui.screenshot()
@@ -225,12 +224,23 @@ with placeholder.container():
                 st.subheader("How did I come up with this?")
                 
                 try:
-                    st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
+                    
+                    start_index = output['cocktail'].strip().partition("Rationale:")[2].find("Shopping List:")
+                    if start_index != -1:
+                        st.markdown(output['cocktail'].strip().partition("Rationale:")[2][:start_index])
+                    else:
+                        st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
+                    
+                    #st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
+                    #print("****___****")
+                    #print(output['cocktail'].strip().partition("Rationale:")[2])
+                    #print("****___****")
                 except ValueError:
                     st.markdown("")
                     
                 try:
                     st.subheader("Shopping List ")
+                    st.caption("Here is a shopping list to prepare the drink")
                     slist = output['cocktail'].strip().partition("Rationale:")[2]
                     slist = slist.strip().partition("Shopping List:")[2]
                     
