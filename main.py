@@ -199,7 +199,7 @@ with placeholder.container():
                 stmp = stmp.strip().partition("Shopping List:")[2]
                 
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = "High detail ad style photo of a " + drink + "  named the " + cocktail_name + ". No humans or faces. --ar 2:3"
+                prompt_4_diffusion = "Maximilism, cinematic quality, sharp focus, intricate details of a " + drink + "  named the " + cocktail_name + ". Apt for a " + occasion + " occasion."
                 
                 #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover. No human images or faces please." 
                 #--ar 4:3 --v 4 --c 100"
