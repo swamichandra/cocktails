@@ -111,9 +111,9 @@ occasion_list = ["Wedding", "Birthday", "Anniversary", "Team Event", "Party", "T
 occasion_list = sorted(occasion_list)
 
 
-ingredients = ['Bourbon', 'Brandy', 'Gin', 'Grappa', 'Pisco', 'Port', 'Rum', 'Sherry', 'Single Malt Scotch', 'Tequila', 'Vermouth', 'Vodka', 'Whisky', 'Wine', 'Agave', 'Apple Slice', 'Lemon Twist', 'Mint Leaves', 'Orange Slice', 'Club Soda', 'Coffee Concentrate', 'Coke', 'Root Beer', 'Honey']
+ingredients = ['Bourbon', 'Brandy', 'Gin', 'Grappa', 'Pisco', 'Port', 'Rum', 'Sherry', 'Single Malt Scotch', 'Tequila', 'Vermouth', 'Vodka', 'Whisky', 'Wine', 'Agave', 'Apple Slice', 'Lemon Twist', 'Mango Pulp', 'Mint Leaves', 'Orange Slice', 'Club Soda', 'Coffee Concentrate', 'Coke', 'Root Beer', 'Honey']
 
-ingredients_nonalcoholic = ['Agave', 'Apple', 'Banana', 'Blackberries', 'Blueberries', 'Buttermilk', 'Club Soda', 'Cocktail Umbrellas', 'Coffee Concentrate', 'Coke', 'Edible Flowers', 'Grapefruit Juice', 'Honey Syrup', 'Lassi', 'Lavender', 'Lemon', 'Lemon Juice', 'Lemon and Lime Zest', 'Lime Juice', 'Lyre American Malt', 'Mango Lassi', 'Mape Syrup', 'Maraschino Cherry', 'Mint Leaves', 'Orange', 'Orange Juice', 'Peach', 'Pear', 'Pepsi', 'Pineapple', 'Pineapple Juice', 'Raspberries', 'Ritual Gin', 'Ritual Tequila', 'Rosemary', 'Sage', 'Salt Lassi', 'Seedlip', 'Strawberries', 'Thyme', 'Tonic Water', 'Yogurt']
+ingredients_nonalcoholic = ['Agave', 'Apple', 'Banana', 'Blackberries', 'Blueberries', 'Buttermilk', 'Club Soda', 'Cocktail Umbrellas', 'Coffee Concentrate', 'Coke', 'Edible Flowers', 'Grapefruit Juice', 'Honey Syrup', 'Lassi', 'Lavender', 'Lemon', 'Lemon Juice', 'Lemon and Lime Zest', 'Lime Juice', 'Lyre American Malt', 'Mango Lassi', 'Maple Syrup', 'Maraschino Cherry', 'Mint Leaves', 'Orange', 'Orange Juice', 'Peach', 'Pear', 'Pepsi', 'Pineapple', 'Pineapple Juice', 'Raspberries', 'Ritual Gin', 'Ritual Tequila', 'Rosemary', 'Sage', 'Salt Lassi', 'Seedlip', 'Strawberries', 'Thyme', 'Tonic Water', 'Yogurt']
 
 NON_ALCOHOLIC_FLAG = False
 drink = ''
@@ -199,7 +199,7 @@ with placeholder.container():
                 stmp = stmp.strip().partition("Shopping List:")[2]
                 
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = "Simplicity ad photo of a " + drink + "  named the " + cocktail_name + ". It contains " + stmp + ". --ar 2:3"
+                prompt_4_diffusion = "Ultrareal magazine cover photo of a " + drink + "  named the " + cocktail_name + ". It contains " + stmp + ". --ar 2:3"
                 
                 #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover. No human images or faces please." 
                 #--ar 4:3 --v 4 --c 100"
