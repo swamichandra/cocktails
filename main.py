@@ -74,7 +74,7 @@ PRESENCE_PENALTY = 1.02
 llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 
 
-template = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for an occasion that is a {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
+template = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for an occasion that is a {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid meat or eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
 Cocktail Name: 
 Ingredients:
 Instructions:
@@ -111,7 +111,7 @@ occasion_list = ["Wedding", "Birthday", "Anniversary", "Team Event", "Party", "T
 occasion_list = sorted(occasion_list)
 
 
-ingredients = ['Agave', 'Bourbon', 'Brandy', 'Gin', 'Grappa', 'Pisco', 'Port', 'Rum', 'Sherry', 'Single Malt Scotch', 'Tequila', 'Vermouth', 'Vodka', 'Whisky', 'Wine', 'Apple Slice', 'Lemon Twist', 'Mint Leaves', 'Orange Slice', 'Club Soda', 'Coffee Concentrate', 'Coke', 'Root Beer', 'Honey']
+ingredients = ['Bourbon', 'Brandy', 'Gin', 'Grappa', 'Pisco', 'Port', 'Rum', 'Sherry', 'Single Malt Scotch', 'Tequila', 'Vermouth', 'Vodka', 'Whisky', 'Wine', 'Agave', 'Apple Slice', 'Lemon Twist', 'Mint Leaves', 'Orange Slice', 'Club Soda', 'Coffee Concentrate', 'Coke', 'Root Beer', 'Honey']
 
 ingredients_nonalcoholic = ['Agave', 'Apple', 'Banana', 'Blackberries', 'Blueberries', 'Buttermilk', 'Club Soda', 'Cocktail Umbrellas', 'Coffee Concentrate', 'Coke', 'Edible Flowers', 'Grapefruit Juice', 'Honey Syrup', 'Lassi', 'Lavender', 'Lemon', 'Lemon Juice', 'Lemon and Lime Zest', 'Lime Juice', 'Lyre American Malt', 'Mango Lassi', 'Mape Syrup', 'Maraschino Cherry', 'Mint Leaves', 'Orange', 'Orange Juice', 'Peach', 'Pear', 'Pepsi', 'Pineapple', 'Pineapple Juice', 'Raspberries', 'Ritual Gin', 'Ritual Tequila', 'Rosemary', 'Sage', 'Salt Lassi', 'Seedlip', 'Strawberries', 'Thyme', 'Tonic Water', 'Yogurt']
 
@@ -143,7 +143,7 @@ with placeholder.container():
                 #drink = 'No Alcohol Mocktail'
                 
         with col2:
-            occasion = st.selectbox('What is the occasion?', options=occasion_list)
+            occasion = st.selectbox('Optionally, what is the occasion?', options=occasion_list)
             
         with col3:
             if NON_ALCOHOLIC_FLAG:
@@ -194,8 +194,12 @@ with placeholder.container():
             with col2:
                 st.subheader("How will this drink look?")
                 #st.markdown(drink)
+                
+                stmp = output['cocktail'].strip().partition("Rationale:")[2]
+                stmp = stmp.strip().partition("Shopping List:")[2]
+                
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = "A fantastical close up magazine photo featuring a " + drink + "  named the " + cocktail_name + ". It contains " + ingredient_input + ". with the effect of film photography and graininess for a nostalgic feel."
+                prompt_4_diffusion = "Joan Miró’s inspired magazine photo of a " + drink + "  named the " + cocktail_name + ". It contains " + stmp + ". --ar 2:3"
                 
                 #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Contains " + ingredient_input + ". Magazine cover. No human images or faces please." 
                 #--ar 4:3 --v 4 --c 100"
@@ -229,6 +233,15 @@ with placeholder.container():
                     st.subheader("Shopping List ")
                     slist = output['cocktail'].strip().partition("Rationale:")[2]
                     slist = slist.strip().partition("Shopping List:")[2]
+                    
+                    #ingredients = slist
+                    #ilist = slist.split("\n")
+                    #print(ilist)
+
+                    #for i in ilist:
+                    #    href = f"<a href='{i}'>{i}</a>"
+                    #    st.markdown(href)
+                    
                     st.markdown(slist)
                 except ValueError:
                     st.markdown("")
@@ -237,7 +250,7 @@ with placeholder.container():
             with col2:
                 st.subheader("Under the Covers: Goal, Plan & Chain ")
                 st.markdown(f"""###### Goal: Come up with an olfactory pleasant {drink}""")
-                st.markdown(f"""**Plan**: Draw Inspiration ➺ Pick Ingredients ➺ Generate Drink ➺ Mixing Instructions ➺ Visualize Drink ➺ Provide Explanation""")
+                st.markdown(f"""**Plan**: Draw Inspiration ➺ Pick Ingredients ➺ Generate Drink ➺ Mixing Instructions ➺ Visualize Drink ➺ Create Shopping List ➺ Provide Explanation""")
                 st.json(output)
                 
             # Create an S3 Client 
