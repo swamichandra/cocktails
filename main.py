@@ -73,29 +73,33 @@ PRESENCE_PENALTY = 1.02
 
 llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600, top_p=1)
 
-template = """The occasion is a {occasion}. You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for the {occasion}. It must pair well with the {cuisine} cuisine. Also ensure the drink pairs well with {main_dish}. Use {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
+
+template = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for an occasion that is a {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
 Cocktail Name: 
 Ingredients:
 Instructions:
 Citations:
-Rationale:###
+Rationale:
+Shopping List:
 """
 
-prompt_4_cocktail = PromptTemplate(input_variables=["drink", "ingredient", "occasion", "cuisine", "additional_instructions", "main_dish"], template=template.strip(),)
+template_new = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & apt for an occasion that is a {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from. The output must be a JSON with following elements: Cocktail Name, Catch Phrase, Ingredients, Instructions, Citations, Shopping List, Rationale, Short Description. Use the drink name and to come up with a restaurant style short writeup."""
+
+prompt_4_cocktail = PromptTemplate(input_variables=["drink", "ingredient", "occasion", "additional_instructions", "main_dish"], template=template.strip(),)
 cocktail_gen_chain = LLMChain(llm=llm, prompt=prompt_4_cocktail, output_key="cocktail", verbose=True)
 
 #This is an LLMChain to generate a short haiku caption for the cocktail based on the ingredients.
 llm = OpenAI(model_name=PRIMARY_MODEL, temperature=0.2, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=75)
 
-template2 = """Write a restaurant menu style description for a {drink} that has the following ingredients {ingredient}, suitable for a {occasion} occasion. It must pair well with {cuisine} cuisine. Strictly 50 words only. Only generate complete sentences. Be crisp and short."""
+template2 = """Write a restaurant menu style description for a {drink} that has the following ingredients {ingredient}, suitable for a {occasion} occasion. It must pair well with {main_dish}. Strictly 50 words only. Only generate complete sentences. Be crisp and short."""
 
-prompt_4_caption = PromptTemplate(input_variables=["drink", "ingredient", "cuisine", "occasion"], template=template2.strip(),)
+prompt_4_caption = PromptTemplate(input_variables=["drink", "ingredient", "main_dish", "occasion"], template=template2.strip(),)
 cocktail_caption_chain = LLMChain(llm=llm, prompt=prompt_4_caption, output_key="caption", verbose=True)
 
 #This is the overall chain where we run these two chains in sequence.
 overall_chain = SequentialChain(
     chains=[cocktail_gen_chain, cocktail_caption_chain],
-    input_variables=['drink', 'ingredient', 'cuisine', 'occasion', 'additional_instructions', 'main_dish'],
+    input_variables=['drink', 'ingredient', 'occasion', 'additional_instructions', 'main_dish'],
     # Here we return multiple variables
     output_variables=['cocktail', 'caption'],
     verbose=True)
@@ -110,9 +114,6 @@ occasion_list = sorted(occasion_list)
 ingredients = ['Agave', 'Bourbon', 'Brandy', 'Gin', 'Grappa', 'Pisco', 'Port', 'Rum', 'Sherry', 'Single Malt Scotch', 'Tequila', 'Vermouth', 'Vodka', 'Whisky', 'Wine', 'Apple Slice', 'Lemon Twist', 'Mint Leaves', 'Orange Slice', 'Club Soda', 'Coffee Concentrate', 'Coke', 'Root Beer', 'Honey']
 
 ingredients_nonalcoholic = ['Agave', 'Apple', 'Banana', 'Blackberries', 'Blueberries', 'Buttermilk', 'Club Soda', 'Cocktail Umbrellas', 'Coffee Concentrate', 'Coke', 'Edible Flowers', 'Grapefruit Juice', 'Honey Syrup', 'Lassi', 'Lavender', 'Lemon', 'Lemon Juice', 'Lemon and Lime Zest', 'Lime Juice', 'Lyre American Malt', 'Mango Lassi', 'Mape Syrup', 'Maraschino Cherry', 'Mint Leaves', 'Orange', 'Orange Juice', 'Peach', 'Pear', 'Pepsi', 'Pineapple', 'Pineapple Juice', 'Raspberries', 'Ritual Gin', 'Ritual Tequila', 'Rosemary', 'Sage', 'Salt Lassi', 'Seedlip', 'Strawberries', 'Thyme', 'Tonic Water', 'Yogurt']
-
-cuisine_list = ['All', 'Chinese', 'Greek', 'Indian', 'Italian', 'Japanese', 'American', 'Mexican', 'Thai', 'Mediterranean']
-cuisine_list = sorted(cuisine_list)
 
 NON_ALCOHOLIC_FLAG = False
 drink = ''
@@ -132,7 +133,7 @@ placeholder = st.empty()
 
 with placeholder.container():
     with st.form('app'):
-        col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
+        col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
         with col1:
             drink = st.selectbox('Type of drink', options=['Cocktail', 'Shot', 'Punch', 'Non-Alcoholic'])
@@ -143,10 +144,6 @@ with placeholder.container():
                 
         with col2:
             occasion = st.selectbox('What is the occasion?', options=occasion_list)
-
-        with col4:
-            cuisine = st.selectbox('Optionally, cusine to pair with', options=cuisine_list)
-            #print(cuisine)
             
         with col3:
             if NON_ALCOHOLIC_FLAG:
@@ -155,8 +152,8 @@ with placeholder.container():
                 optional_ingredient = st.multiselect(label='Optionally, any particular ingredients?', options=ingredients,)
             #print(optional_ingredient)
 
-        with col5:
-            main_dish = st.text_input("Optionally, main dish to pair with")
+        with col4:
+            main_dish = st.text_input("Optionally, a dish to pair with")
 
         btn = st.form_submit_button("GENERATE")
 
@@ -170,11 +167,11 @@ with placeholder.container():
         #print("*******LLM Prompt")
         #print(prompt_4_cocktail)
         
-        with st.spinner(text="Building your "  + drink + " recipe ..." + " that pairs well with " + cuisine + " cuisine" + " and " + main_dish + " for your " + occasion + " occasion."):
+        with st.spinner(text="Building your "  + drink + " recipe ... that pairs well with  " + main_dish + " for your " + occasion + " occasion."):
             if NON_ALCOHOLIC_FLAG:
-                output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'occasion': occasion, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'Do not include any alcohol. No whisky, cognac, spirits, VSOP, wine, bourbon, gin, scotch, beer in the ingredients', 'main_dish': main_dish})
+                output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'occasion': occasion, 'cocktail_name': cocktail_name, 'additional_instructions':'Do not include any alcohol. No whisky, cognac, spirits, VSOP, wine, bourbon, gin, scotch, beer in the ingredients', 'main_dish': main_dish})
             else:
-                output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'occasion': occasion, 'cocktail_name': cocktail_name, 'cuisine': cuisine, 'additional_instructions':'', 'main_dish': main_dish})
+                output = overall_chain({'drink': drink, 'ingredient': ingredient_input, 'occasion': occasion, 'cocktail_name': cocktail_name, 'additional_instructions': '', 'main_dish': main_dish})
             print("*******")
             print(output)
             print("*******")
@@ -225,6 +222,14 @@ with placeholder.container():
                 
                 try:
                     st.markdown(output['cocktail'].strip().partition("Rationale:")[2])
+                except ValueError:
+                    st.markdown("")
+                    
+                try:
+                    st.subheader("Shopping List ")
+                    slist = output['cocktail'].strip().partition("Rationale:")[2]
+                    slist = slist.strip().partition("Shopping List:")[2]
+                    st.markdown(slist)
                 except ValueError:
                     st.markdown("")
                     
