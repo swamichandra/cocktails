@@ -226,7 +226,7 @@ with placeholder.container():
                 #st.markdown(drink)
                 
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = "Realistic studio photographic portrait of drink of type " + drink + "  named the " + cocktail_name + ". Apt for a " + occasion + " chrome backlighting"
+                prompt_4_diffusion = "Realistic studio photo of a drink of type " + drink + "  and named as " + cocktail_name + ". Apt for " + occasion + " - chrome backlighting, another dimension, digital art"
                 
                 #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Apt for " + occasion + ". Magazine cover. No human images or faces please --ar 4:3 --v 4 --c 100"
                 #st.markdown(prompt_4_diffusion.strip())
