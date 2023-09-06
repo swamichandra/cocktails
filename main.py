@@ -73,7 +73,7 @@ PRESENCE_PENALTY = 0
 
 llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=0.15, top_p=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600)
 
-template = """You are a talented mixologist skilled at crafting palate-pleasing drinks. Please suggest a olfactory pleasant {drink} that would pair well with pair well with {main_dish} for a {occasion}. It must incorporate {ingredient} in your recipe. Use inexpensive/common ingredients. Avoid meat or eggs or yolk as ingredients. Give the drink an innovative, funky and catchy name with four words. {additional_instructions} 
+template = """You are a talented mixologist skilled at crafting palate-pleasing drinks. Please suggest a olfactory pleasant {drink} that would pair well with pair well with {main_dish} for a {occasion}. It must incorporate {ingredient} in your recipe. Ensure the dish and its associated cuisine has a good pairing with the drink you will come up with. Use inexpensive/common ingredients. Avoid meat or eggs or yolk as ingredients. Give the drink a fun name with four (4) words. {additional_instructions} 
 Cocktail Name:
 
 Ingredients:
