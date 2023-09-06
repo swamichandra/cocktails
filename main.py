@@ -73,7 +73,7 @@ PRESENCE_PENALTY = 0
 
 llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=0.15, top_p=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600)
 
-template = """You are a talented mixologist skilled at crafting palate-pleasing drinks. Please suggest a olfactory pleasant {drink} that would pair well with pair well with {main_dish} for a {occasion}. It must incorporate {ingredient} in your recipe. Use inexpensive/common ingredients. Avoid meat or eggs or yolk as ingredients. Give the drink a crazy, funky and catchy name for the drink. {additional_instructions} 
+template = """You are a talented mixologist skilled at crafting palate-pleasing drinks. Please suggest a olfactory pleasant {drink} that would pair well with pair well with {main_dish} for a {occasion}. It must incorporate {ingredient} in your recipe. Use inexpensive/common ingredients. Avoid meat or eggs or yolk as ingredients. Give the drink an innovative, funky and catchy four-word name for the drink. One of the words in the drink name must be made up and not in the dictionary. {additional_instructions} 
 Cocktail Name:
 
 Ingredients:
@@ -83,6 +83,8 @@ Instructions:
 Rationale:
 
 Olfactory Flavor Theory:
+
+Considered but Excluded Drink Pairing:
 
 Catch Phrase:
 
