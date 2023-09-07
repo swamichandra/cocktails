@@ -73,7 +73,8 @@ PRESENCE_PENALTY = 0
 
 llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=0.15, top_p=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=600)
 
-template = """You are a talented mixologist skilled at crafting palate-pleasing drinks. Please suggest a olfactory pleasant {drink} that would pair well with pair well with {main_dish} for a {occasion}. It must incorporate {ingredient} in your recipe. Ensure the dish and its associated cuisine has a good pairing with the drink you will come up with. Use inexpensive/common ingredients. Avoid meat or eggs or yolk as ingredients. Give the drink a fun name with four (4) words. {additional_instructions} 
+template = """You are a talented mixologist skilled at crafting palate-pleasing drinks. Please suggest  an aroma-friendly and olfactory pleasant {drink} to complement {main_dish} at a {occasion}. The recipe should include {ingredient}, pair well with the dish's cuisine, and use affordable, common ingredients. Please avoid meat, eggs, and yolk. Create a trendy four-word drink name, and provide additional details as requested. {additional_instructions}.
+
 Cocktail Name:
 
 Ingredients:
@@ -84,34 +85,14 @@ Rationale:
 
 Olfactory Flavor Theory:
 
+Pairing with Main Dish:
+
 Considered but Excluded Drink Pairing:
 
 Catch Phrase:
 
-Shopping List:
-"""
+Citations & Inspiration for the Recipe:
 
-template_new_3 = """You are a talented mixologist skilled at crafting palate-pleasing drinks. Come up with a olfactory pleasant {drink} that would pair well with pair well with {main_dish} for a {occasion}. It must  Incorporate {ingredient} in your recipe. Use inexpensive/common ingredients. Avoid meat or eggs or yolk as ingredients. Come up with an original name for the cocktail. {additional_instructions} List the ingredients and quantities needed on separate lines. Briefly describe how to prepare the drink. Explain your rationale for choosing each ingredient and how they combine into a tasty beverage, citing any scientific principles of flavor chemistry. Provide a concise "catch phrase" for the cocktail in quotes that captures its essence. Include a shopping list of ingredients at the end
-
-Cocktail Name:
-
-Ingredients:
-
-Instructions:
-
-Citations:
-
-Rationale:
-
-Shopping List:
-"""
-
-template_new_1 = """You are my master mixologist. You will come up with olfactory pleasant {drink} that is appealing, suitable & incorporating elements that are apt for {occasion}. It must pair well with {main_dish}. Incorporate {ingredient} in your recipe. Don't use expensive or exotic ingredients. Avoid meat or eggs or yolk as ingredients. Apply understanding of flavor compounds and food pairing theories. Give the drink a unique name. Ingredients must start in a new line. Add a catch phrase for the drink within double quotes. Always provide a rationale. Also try to provide a scientific explanation for why the ingredients were chosen. {additional_instructions} Provide evidence and citations for where you took the recipe from.
-Cocktail Name: 
-Ingredients:
-Instructions:
-Citations:
-Rationale:
 Shopping List:
 """
 
@@ -121,7 +102,9 @@ cocktail_gen_chain = LLMChain(llm=llm, prompt=prompt_4_cocktail, output_key="coc
 #This is an LLMChain to generate a short haiku caption for the cocktail based on the ingredients.
 llm = OpenAI(model_name=PRIMARY_MODEL, temperature=0.2, top_p=1, frequency_penalty=FREQ_PENALTY, presence_penalty=PRESENCE_PENALTY, max_tokens=75)
 
-template2 = """Write a restaurant menu style description for a {drink} that has the following ingredients {ingredient}, suitable for a {occasion} occasion. It must pair well with {main_dish}. Strictly 50 words only. Only generate complete sentences. Be crisp and short."""
+#template2 = """Write a restaurant menu style description for a {drink} that has the following ingredients {ingredient}, suitable for a {occasion} occasion. It must pair well with {main_dish}. Strictly 50 words only. Only generate complete sentences. Be crisp and short."""
+
+template2 = "Create a 50-word, restaurant menu description for a {drink} featuring {ingredient}, ideal for a {occasion} event. Ensure it complements {main_dish}. Use complete sentences and concise language for fast, high-quality results."
 
 prompt_4_caption = PromptTemplate(input_variables=["drink", "ingredient", "main_dish", "occasion"], template=template2.strip(),)
 cocktail_caption_chain = LLMChain(llm=llm, prompt=prompt_4_caption, output_key="caption", verbose=True)
