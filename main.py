@@ -83,7 +83,7 @@ Instructions:
 
 Rationale:
 
-Olfactory Flavor Theory:
+Olfactory Flavor Pairing:
 
 Pairing with Main Dish:
 
@@ -91,7 +91,9 @@ Considered but Excluded Drink Pairing:
 
 Catch Phrase:
 
-Citations & Inspiration for the Recipe:
+Citations incl Inspiration, Books, & Papers:
+
+Did you invent this drink?: 
 
 Shopping List:
 """
@@ -209,7 +211,7 @@ with placeholder.container():
                 #st.markdown(drink)
                 
                 print("*******Diffusion Prompt")
-                prompt_4_diffusion = "Realistic studio photo of a drink of type " + drink + "  and named as " + cocktail_name + ". Apt for " + occasion + " - chrome backlighting, another dimension, digital art"
+                prompt_4_diffusion = "Realistic studio photo of a drink of type " + drink + "  and named as " + cocktail_name + ". Drink has " + ingredient_input + ". Apt for " + occasion + " - chrome backlighting, another dimension, digital art"
                 
                 #prompt_4_diffusion = drink + " drink named " + cocktail_name + ". Apt for " + occasion + ". Magazine cover. No human images or faces please --ar 4:3 --v 4 --c 100"
                 #st.markdown(prompt_4_diffusion.strip())
