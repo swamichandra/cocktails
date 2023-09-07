@@ -93,8 +93,6 @@ Catch Phrase:
 
 Citations incl Inspiration, Books, & Papers:
 
-Did you invent this drink?: 
-
 Shopping List:
 """
 
