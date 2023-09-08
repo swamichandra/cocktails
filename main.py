@@ -87,6 +87,8 @@ Olfactory Flavor Pairing:
 
 Pairing with Main Dish:
 
+Other Main Dishes to Consider:
+
 Considered but Excluded Drink Pairing:
 
 Catch Phrase:
