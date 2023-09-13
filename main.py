@@ -75,27 +75,17 @@ llm = ChatOpenAI(model_name=PRIMARY_MODEL, temperature=0.15, top_p=1, frequency_
 
 template = """You are a talented mixologist skilled at crafting palate-pleasing drinks. Please suggest  an aroma-friendly and olfactory pleasant {drink} to complement {main_dish} at a {occasion}. The recipe should include {ingredient}, pair well with the dish's cuisine, and use affordable, common ingredients. Please avoid meat, eggs, and yolk. Create a punny, goofy, giggly, outrageous and yet trendy four-word drink name, and provide additional details as requested. {additional_instructions}.
 
-Cocktail Name:
-
-Ingredients:
-
-Instructions:
-
-Rationale:
-
-Olfactory Flavor Pairing:
-
-Pairing with Main Dish:
-
-Other Main Dishes to Consider:
-
-Considered but Excluded Drink Pairing:
-
-Catch Phrase:
-
-Citations incl Inspiration, Books, & Papers:
-
-Shopping List:
+Drink Name: Must be four words long and be punny, goofy, giggly, outrageous, and yet trendy.
+Ingredients: Must be affordable, common, and pair well with the main dish.
+Instructions: Must be clear and concise, and easy to follow.
+Rationale: Must explain why the cocktail is a good pairing for the main dish and the occasion.
+Olfactory Flavor Pairing: Must describe how the flavors of the cocktail complement the flavors of the main dish.
+Pairing with Main Dish: Must explain how the cocktail enhances the flavor of the main dish and the overall dining experience.
+Other Main Dishes to Consider: Must list other main dishes that would be a good pairing for the cocktail.
+Considered but Excluded Drink Pairing: Must list any other cocktails that were considered but ultimately excluded, and explain why they were not selected.
+Catch Phrase: Must be short, memorable, and attention-grabbing.
+Citations incl Inspiration, Books, & Papers: Must list any sources that were used to create the cocktail recipe.
+Shopping List: Bullet list all of the ingredients needed to make the cocktail.
 """
 
 prompt_4_cocktail = PromptTemplate(input_variables=["drink", "ingredient", "occasion", "additional_instructions", "main_dish"], template=template.strip(),)
@@ -126,7 +116,7 @@ occasion_list = ["Family Celebration", "Birthday", "Team Event", "Wedding", "Win
 occasion_list = sorted(occasion_list)
 
 
-ingredients = ['Bourbon', 'Brandy', 'Gin', 'Grappa', 'Pisco', 'Port', 'Rum', 'Sherry', 'Single Malt Scotch', 'Tequila', 'Vermouth', 'Vodka', 'Whisky', 'Wine', 'Agave', 'Apple Slice', 'Lemon Twist', 'Mango Pulp', 'Mint Leaves', 'Orange Slice', 'Club Soda', 'Coffee Concentrate', 'Coke', 'Root Beer', 'Honey']
+ingredients = ['Bourbon', 'Brandy', 'Champagne', 'Gin', 'Grappa', 'Pisco', 'Port', 'Rum', 'Sherry', 'Single Malt Scotch', 'Tequila', 'Vermouth', 'Vodka', 'Whisky', 'Wine', 'Agave', 'Apple Slice', 'Lemon Twist', 'Mango Pulp', 'Mint Leaves', 'Orange Slice', 'Club Soda', 'Coffee Concentrate', 'Coke', 'Root Beer', 'Honey']
 
 ingredients_nonalcoholic = ['Agave', 'Apple', 'Banana', 'Blackberries', 'Blueberries', 'Buttermilk', 'Club Soda', 'Cocktail Umbrellas', 'Coffee Concentrate', 'Coke', 'Edible Flowers', 'Grapefruit Juice', 'Honey Syrup', 'Lassi', 'Lavender', 'Lemon', 'Lemon Juice', 'Lemon and Lime Zest', 'Lime Juice', 'Lyre American Malt', 'Mango Lassi', 'Maple Syrup', 'Maraschino Cherry', 'Mint Leaves', 'Orange', 'Orange Juice', 'Peach', 'Pear', 'Pepsi', 'Pineapple', 'Pineapple Juice', 'Raspberries', 'Ritual Gin', 'Ritual Tequila', 'Rosemary', 'Sage', 'Salt Lassi', 'Seedlip', 'Strawberries', 'Thyme', 'Tonic Water', 'Yogurt']
 
