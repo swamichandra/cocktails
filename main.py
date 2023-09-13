@@ -181,7 +181,7 @@ with placeholder.container():
             print(output)
             print("*******")
             cocktail_name = output['cocktail'][:output['cocktail'].index("Ingredients")]
-            cocktail_name = cocktail_name.strip().partition("Cocktail Name:")[2].strip()
+            cocktail_name = cocktail_name.strip().partition("Drink Name:")[2].strip()
             output['cocktail_name'] = cocktail_name
             #st.header(cocktail_name)
             #print(cocktail_name)
